@@ -1,5 +1,6 @@
+const renderContainer = document.querySelector('#3d-renderer');
 const scene = new THREE.Scene();
-scene.background = new THREE.Color('skyblue');
+scene.background = new THREE.Color(0x121212);
 
 // Create a Camera
 const fov = 90; // AKA Field of View
@@ -16,13 +17,18 @@ const material = new THREE.MeshBasicMaterial();
 const mesh = new THREE.Mesh(geometry, material);
 scene.add(mesh);
 
-
-const renderer = new THREE.WebGLRenderer();
+const renderer = new THREE.WebGLRenderer({antialias: true});
 renderer.setSize( window.innerWidth, window.innerHeight );
 renderer.setPixelRatio( window.devicePixelRatio );
 
 // add the automatically created <canvas> element to the page
 document.body.appendChild( renderer.domElement );
 
-// render, or 'create a still image', of the scene
-renderer.render( scene, camera );
+render();
+
+function render() {
+  renderer.render( scene, camera );  
+  mesh.rotation.y += 0.01;
+  mesh.rotation.x += 0.01;
+  window.requestAnimationFrame(render);
+}
