@@ -1,4 +1,4 @@
-const renderContainer = document.querySelector('#3d-renderer');
+const renderContainer = document.querySelector('#renderer');
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x121212);
 
@@ -17,12 +17,9 @@ const material = new THREE.MeshBasicMaterial();
 const mesh = new THREE.Mesh(geometry, material);
 scene.add(mesh);
 
-const renderer = new THREE.WebGLRenderer({antialias: true});
+const renderer = new THREE.WebGLRenderer({antialias: true, canvas: renderContainer});
 renderer.setSize( window.innerWidth, window.innerHeight );
 renderer.setPixelRatio( window.devicePixelRatio );
-
-// add the automatically created <canvas> element to the page
-document.body.appendChild( renderer.domElement );
 
 render();
 

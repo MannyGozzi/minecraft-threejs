@@ -1,4 +1,11 @@
-body, html {
+body,
+html {
   margin: 0;
   padding: 0;
+  overflow-x: hidden;
+}
+
+canvas {
+  width: 100vw;
+  height: 100vh;
 }
