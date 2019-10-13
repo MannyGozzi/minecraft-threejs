@@ -38,7 +38,9 @@ const cube = new THREE.Mesh(
 cube.position.y += 2;
 scene.add(cube);
 
-var texture = new THREE.TextureLoader().load( 'https://cdn.glitch.com/09b41b8e-5b1b-470e-8b60-eeaccaea49e9%2Fmud_grass_texture.jpg?v=1570931583854' );
+var texture = new THREE.TextureLoader().load(
+  "https://cdn.glitch.com/09b41b8e-5b1b-470e-8b60-eeaccaea49e9%2Fmud_grass_texture.jpg?v=1570931583854"
+);
 
 const ground = new THREE.Mesh(
   new THREE.PlaneGeometry(20, 20),
@@ -58,7 +60,6 @@ window.addEventListener("resize", () => {
 });
 
 controls = new THREE.PointerLockControls(camera);
-controls.enabled = true;
 scene.add(controls.getObject());
 
 var blocker = document.getElementById("blocker");
@@ -92,11 +93,7 @@ if (havePointerLock) {
   // Hook pointer lock state change events
   document.addEventListener("pointerlockchange", pointerlockchange, false);
   document.addEventListener("mozpointerlockchange", pointerlockchange, false);
-  document.addEventListener(
-    "webkitpointerlockchange",
-    pointerlockchange,
-    false
-  );
+  document.addEventListener("webkitpointerlockchange", pointerlockchange, false);
   document.addEventListener("pointerlockerror", pointerlockerror, false);
   document.addEventListener("mozpointerlockerror", pointerlockerror, false);
   document.addEventListener("webkitpointerlockerror", pointerlockerror, false);
@@ -200,14 +197,14 @@ function render() {
   renderer.render(scene, camera);
   cube.rotation.y += 0.01;
   cube.rotation.x += 0.01;
-  window.requestAnimationFrame(render);
 
   if (controlsEnabled) {
     const magnitude = 100.0;
     var time = performance.now();
     var delta = (time - prevTime) / 1000;
-    velocity.x -= velocity.x * 10.0 * delta;
-    velocity.z -= velocity.z * 10.0 * delta;
+    //add friction and gravity to velocity
+    velocity.x *= 0.1;
+    velocity.z *= 0.1;
     velocity.y -= 9.8 * 10 * delta; // 100. = mass
     if (moveForward) velocity.z -= magnitude * delta;
     if (moveBackward) velocity.z += magnitude * delta;
@@ -223,4 +220,5 @@ function render() {
     }
     prevTime = time;
   }
+  window.requestAnimationFrame(render);
 }
