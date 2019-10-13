@@ -11,6 +11,7 @@ export default class PointerLockControls {
     this.velocity = new THREE.Vector3();
     this.controls = new THREE.PointerLockControls(camera);
     this.controls.enabled = true;
+    this.object = this.controls.getObject();
     
     let blocker = document.getElementById("blocker");
 let instructions = document.getElementById("instructions");
@@ -153,13 +154,15 @@ document.addEventListener("keyup", onKeyUp, false);
     if (this.moveBackward) this.velocity.z += magnitude * delta;
     if (this.moveLeft) this.velocity.x -= magnitude * delta;
     if (this.moveRight) this.velocity.x += magnitude * delta;
-    this.controls.getObject().translateX(this.velocity.x * delta);
+    this.object.translateX(this.velocity.x * delta);
     //fixes bug bc y-tilt would affect x, z movement
-    this.controls.getObject().position.y += this.velocity.y * delta;
-    this.controls.getObject().translateZ(this.velocity.z * delta);
-    if (this.controls.getObject().position.y < 1) {
+   let info = document.querySelector('.info');
+      info.innerHTML = JSON.stringify(this.velocity);
+    this.object.position.y += this.velocity.y * delta;
+    this.object.translateZ(this.velocity.z * delta);
+    if (this.object.position.y < 1) {
       this.velocity.y = 0;
-      this.controls.getObject().position.y = 1;
+      this.object.position.y = 1;
       this.canJump = true;
     }
     this.prevTime = time;
