@@ -52,13 +52,12 @@ window.addEventListener("resize", () => {
 let pointerLock = new PointerLockControls(camera);
 scene.add(pointerLock.getObject());
 
-render();
+render(pointerLock.getObject());
 
 function render() {
   renderer.render(scene, camera);
   cube.rotation.y += 0.01;
   cube.rotation.x += 0.01;
   pointerLock.update();
-  camera.position.set(pointerLock.getObject().position);
   window.requestAnimationFrame(render);
 }
