@@ -36,11 +36,14 @@ const cube = new THREE.Mesh(
 cube.position.y += 2;
 scene.add(cube);
 
+var texture = new THREE.TextureLoader().load( 'https://cdn.glitch.com/09b41b8e-5b1b-470e-8b60-eeaccaea49e9%2Fmud_grass_texture.jpg?v=1570931583854' );
+
 const ground = new THREE.Mesh(
   new THREE.PlaneGeometry(20, 20),
-  new THREE.MeshBasicMaterial({ color: 0x00ff22, side: THREE.DoubleSide })
+  new THREE.MeshBasicMaterial({ side: THREE.DoubleSide, map: texture })
 );
 ground.rotation.x += Math.PI / 2;
+ground.position.y = 0;
 scene.add(ground);
 
 window.addEventListener("resize", () => {
@@ -211,9 +214,9 @@ function render() {
     controls.getObject().translateX(velocity.x * delta);
     controls.getObject().translateY(velocity.y * delta);
     controls.getObject().translateZ(velocity.z * delta);
-    if (controls.getObject().position.y < 10) {
+    if (controls.getObject().position.y < 1) {
       velocity.y = 0;
-      controls.getObject().position.y = 10;
+      controls.getObject().position.y = 1;
       canJump = true;
     }
     prevTime = time;
