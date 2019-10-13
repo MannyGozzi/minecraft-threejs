@@ -203,15 +203,16 @@ function render() {
     var time = performance.now();
     var delta = (time - prevTime) / 1000;
     //add friction and gravity to velocity
-    velocity.x -= velocity.x * 100 * delta;
-    velocity.z -= velocity.y * 100 * delta;
+    velocity.x -= velocity.x * 10 * delta;
+    velocity.z -= velocity.z * 10 * delta;
     velocity.y -= 9.8 * 10 * delta; // 100. = mass
     if (moveForward) velocity.z -= magnitude * delta;
     if (moveBackward) velocity.z += magnitude * delta;
     if (moveLeft) velocity.x -= magnitude * delta;
     if (moveRight) velocity.x += magnitude * delta;
     controls.getObject().translateX(velocity.x * delta);
-    controls.getObject().translateY(velocity.y * delta);
+    //fixes bug bc y-tilt would affect x, z movement
+    controls.getObject().position.y += velocity.y * delta;
     controls.getObject().translateZ(velocity.z * delta);
     if (controls.getObject().position.y < 1) {
       velocity.y = 0;
