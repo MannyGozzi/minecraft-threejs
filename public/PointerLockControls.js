@@ -10,6 +10,7 @@ export default class PointerLockControls {
     this.prevTime = performance.now();
     this.velocity = new THREE.Vector3();
     this.controls = new THREE.PointerLockControls(camera);
+    this.controls.enabled = true;
     
     let blocker = document.getElementById("blocker");
 let instructions = document.getElementById("instructions");
@@ -26,10 +27,8 @@ if (havePointerLock) {
       document.webkitPointerLockElement === element
     ) {
       this.controlsEnabled = true;
-      this.controls.enabled = true;
       blocker.style.display = "none";
     } else {
-      this.controls.enabled = false;
       blocker.style.display = "-webkit-box";
       blocker.style.display = "-moz-box";
       blocker.style.display = "box";
@@ -101,7 +100,7 @@ let onKeyDown = function(event) {
       break;
     case 37: // left
     case 65: // a
-      this.this.moveLeft = true;
+      this.moveLeft = true;
       break;
     case 40: // down
     case 83: // s
