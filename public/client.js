@@ -58,7 +58,7 @@ function render() {
   renderer.render(scene, camera);
   cube.rotation.y += 0.01;
   cube.rotation.x += 0.01;
-
   pointerLock.update();
+  camera.position.set(pointerLock.getObject().position);
   window.requestAnimationFrame(render);
 }
