@@ -1,6 +1,8 @@
 const renderContainer = document.querySelector("#renderer");
 const scene = new THREE.Scene();
 scene.background = new THREE.Color("skyblue");
+//TODO character moves without pressing button
+//fix buggy pointerlock
 
 var controls;
 var controlsEnabled = true;
