@@ -25,11 +25,11 @@ if (havePointerLock) {
       document.mozPointerLockElement === element ||
       document.webkitPointerLockElement === element
     ) {
-      controlsEnabled = true;
-      controls.enabled = true;
+      this.controlsEnabled = true;
+      this.controls.enabled = true;
       blocker.style.display = "none";
     } else {
-      controls.enabled = false;
+      this.controls.enabled = false;
       blocker.style.display = "-webkit-box";
       blocker.style.display = "-moz-box";
       blocker.style.display = "box";
@@ -62,8 +62,8 @@ if (havePointerLock) {
             document.mozFullscreenElement === element ||
             document.mozFullScreenElement === element
           ) {
-            document.removeEventListener("fullscreenchange", fullscreenchange);
-            document.removeEventListener(
+            document.rethis.moveEventListener("fullscreenchange", fullscreenchange);
+            document.rethis.moveEventListener(
               "mozfullscreenchange",
               fullscreenchange
             );
@@ -101,19 +101,19 @@ let onKeyDown = function(event) {
       break;
     case 37: // left
     case 65: // a
-      moveLeft = true;
+      this.this.moveLeft = true;
       break;
     case 40: // down
     case 83: // s
-      moveBackward = true;
+      this.moveBackward = true;
       break;
     case 39: // right
     case 68: // d
-      moveRight = true;
+      this.moveRight = true;
       break;
     case 32: // space
-      if (canJump === true) velocity.y = 35;
-      canJump = false;
+      if (this.canJump === true) this.velocity.y = 35;
+      this.canJump = false;
       break;
   }
 };
@@ -121,19 +121,19 @@ let onKeyUp = function(event) {
   switch (event.keyCode) {
     case 38: // up
     case 87: // w
-      moveForward = false;
+      this.moveForward = false;
       break;
     case 37: // left
     case 65: // a
-      moveLeft = false;
+      this.moveLeft = false;
       break;
     case 40: // down
     case 83: // s
-      moveBackward = false;
+      this.moveBackward = false;
       break;
     case 39: // right
     case 68: // d
-      moveRight = false;
+      this.moveRight = false;
       break;
   }
 };
@@ -145,6 +145,31 @@ document.addEventListener("keyup", onKeyUp, false);
     return this.controls.getObject();
   }
 
+  update() {
+    if (this.controlsEnabled) {
+    const magnitude = 50.0;
+    let time = performance.now();
+    let delta = (time - this.prevTime) / 1000;
+    //add friction and gravity to velocity
+    this.velocity.x -= this.velocity.x * 10 * delta;
+    this.velocity.z -= this.velocity.z * 10 * delta;
+    this.velocity.y -= 9.8 * 10 * delta; // 100. = mass
+    if (this.moveForward) this.velocity.z -= magnitude * delta;
+    if (this.moveBackward) this.velocity.z += magnitude * delta;
+    if (this.moveLeft) this.velocity.x -= magnitude * delta;
+    if (this.moveRight) this.velocity.x += magnitude * delta;
+    this.controls.getObject().translateX(this.velocity.x * delta);
+    //fixes bug bc y-tilt would affect x, z movement
+    this.controls.getObject().position.y += this.velocity.y * delta;
+    this.controls.getObject().translateZ(this.velocity.z * delta);
+    if (this.controls.getObject().position.y < 1) {
+      this.velocity.y = 0;
+      this.controls.getObject().position.y = 1;
+      this.canJump = true;
+    }
+    this.prevTime = time;
+  }
+  }
 
 
 

@@ -1,9 +1,8 @@
-import PointerLockControls from 'PointerLockControls.js';
+import PointerLockControls from '/PointerLockControls.js';
 const renderContainer = document.querySelector("#renderer");
 const scene = new THREE.Scene();
 scene.background = new THREE.Color("skyblue");
 //TODO character moves without pressing button
-//fix buggy pointerlock
 
 // Create a Camera
 const fov = 90; // AKA Field of View
@@ -50,7 +49,7 @@ window.addEventListener("resize", () => {
   camera.updateProjectionMatrix();
 });
 
-let pointerLock = PointerLockControls(camera);
+let pointerLock = new PointerLockControls(camera);
 scene.add(pointerLock.getObject());
 
 render();
@@ -60,28 +59,6 @@ function render() {
   cube.rotation.y += 0.01;
   cube.rotation.x += 0.01;
 
-  if (controlsEnabled) {
-    const magnitude = 50.0;
-    var time = performance.now();
-    var delta = (time - prevTime) / 1000;
-    //add friction and gravity to velocity
-    velocity.x -= velocity.x * 10 * delta;
-    velocity.z -= velocity.z * 10 * delta;
-    velocity.y -= 9.8 * 10 * delta; // 100. = mass
-    if (moveForward) velocity.z -= magnitude * delta;
-    if (moveBackward) velocity.z += magnitude * delta;
-    if (moveLeft) velocity.x -= magnitude * delta;
-    if (moveRight) velocity.x += magnitude * delta;
-    controls.getObject().translateX(velocity.x * delta);
-    //fixes bug bc y-tilt would affect x, z movement
-    controls.getObject().position.y += velocity.y * delta;
-    controls.getObject().translateZ(velocity.z * delta);
-    if (controls.getObject().position.y < 1) {
-      velocity.y = 0;
-      controls.getObject().position.y = 1;
-      canJump = true;
-    }
-    prevTime = time;
-  }
+  pointerLock.update();
   window.requestAnimationFrame(render);
 }
