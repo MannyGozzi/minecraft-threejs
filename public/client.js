@@ -49,6 +49,7 @@ window.addEventListener("resize", () => {
   camera.updateProjectionMatrix();
 });
 
+//add controls
 let pointerLock = new PointerLockControls(camera);
 scene.add(pointerLock.controls.getObject());
 

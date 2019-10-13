@@ -10,7 +10,6 @@ export default class PointerLockControls {
     this.prevTime = performance.now();
     this.velocity = new THREE.Vector3();
     this.controls = new THREE.PointerLockControls(camera);
-    this.controls.enabled = true;
     this.object = this.controls.getObject();
     
     let blocker = document.getElementById("blocker");
@@ -93,7 +92,8 @@ if (havePointerLock) {
     "Your browser doesn't seem to support Pointer Lock API";
 }
 
-let onKeyDown = function(event) {
+let onKeyDown = (event) => {
+
   switch (event.keyCode) {
     case 38: // up
     case 87: // w
@@ -112,12 +112,12 @@ let onKeyDown = function(event) {
       this.moveRight = true;
       break;
     case 32: // space
-      if (this.canJump === true) this.velocity.y = 35;
+      if (this.canJump === true) this.velocity.y = 30;
       this.canJump = false;
       break;
   }
 };
-let onKeyUp = function(event) {
+let onKeyUp = (event) => {
   switch (event.keyCode) {
     case 38: // up
     case 87: // w
@@ -157,7 +157,9 @@ document.addEventListener("keyup", onKeyUp, false);
     this.object.translateX(this.velocity.x * delta);
     //fixes bug bc y-tilt would affect x, z movement
    let info = document.querySelector('.info');
-      info.innerHTML = JSON.stringify(this.velocity);
+      info.innerHTML = `x: ${this.object.position.x} <br>
+                                         y: ${this.object.position.y} <br>
+                                         z: ${this.object.position.z}`;
     this.object.position.y += this.velocity.y * delta;
     this.object.translateZ(this.velocity.z * delta);
     if (this.object.position.y < 1) {

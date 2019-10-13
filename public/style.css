@@ -29,6 +29,5 @@ canvas {
 
 .info {
   position: absolute;
-  width: 100%;
-  text-align: center;
+  margin: 0.5em;
 }
