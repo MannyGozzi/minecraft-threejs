@@ -15,6 +15,9 @@ camera.position.set( 0, 0, 10 );
 const renderer = new THREE.WebGLRenderer({antialias: true, canvas: renderContainer});
 renderer.setSize( window.innerWidth, window.innerHeight );
 renderer.setPixelRatio( window.devicePixelRatio );
+var controls = new THREE.PointerLockControls(camera);
+var player = controls.getObject();
+scene.add(player);
 
 const cube = new THREE.Mesh(new THREE.BoxBufferGeometry( 2, 2, 2 ), new THREE.MeshBasicMaterial());
 scene.add(cube);
