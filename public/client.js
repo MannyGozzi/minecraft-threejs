@@ -19,7 +19,9 @@ renderer.setPixelRatio( window.devicePixelRatio );
 const cube = new THREE.Mesh(new THREE.BoxBufferGeometry( 2, 2, 2 ), new THREE.MeshBasicMaterial());
 scene.add(cube);
 
-const ground = new THREE.Mesh(new THREE.PlaneGeometry(20, 20), new THREE.Mesh);
+const ground = new THREE.Mesh(new THREE.PlaneGeometry(20, 20), new THREE.MeshBasicMaterial({color: 0x00ff22, side: THREE.DoubleSide}));
+ground.rotation.x += Math.PI / 2;
+ground.position.y -= 2;
 scene.add(ground);
 
 
@@ -31,7 +33,7 @@ render();
 
 function render() {
   renderer.render( scene, camera );  
-  mesh.rotation.y += 0.01;
-  mesh.rotation.x += 0.01;
+  cube.rotation.y += 0.01;
+  cube.rotation.x += 0.01;
   window.requestAnimationFrame(render);
 }
