@@ -163,7 +163,7 @@ var onKeyDown = function(event) {
       moveRight = true;
       break;
     case 32: // space
-      if (canJump === true) velocity.y += 35;
+      if (canJump === true) velocity.y = 35;
       canJump = false;
       break;
   }
@@ -199,12 +199,12 @@ function render() {
   cube.rotation.x += 0.01;
 
   if (controlsEnabled) {
-    const magnitude = 100.0;
+    const magnitude = 50.0;
     var time = performance.now();
     var delta = (time - prevTime) / 1000;
     //add friction and gravity to velocity
-    velocity.x *= 0.1;
-    velocity.z *= 0.1;
+    velocity.x -= velocity.x * 100 * delta;
+    velocity.z -= velocity.y * 100 * delta;
     velocity.y -= 9.8 * 10 * delta; // 100. = mass
     if (moveForward) velocity.z -= magnitude * delta;
     if (moveBackward) velocity.z += magnitude * delta;
