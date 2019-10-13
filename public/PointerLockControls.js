@@ -139,12 +139,8 @@ let onKeyUp = function(event) {
 document.addEventListener("keydown", onKeyDown, false);
 document.addEventListener("keyup", onKeyUp, false);
   }
-  
-  getObject() {
-    return this.controls.getObject();
-  }
 
-  update(object) {
+  update() {
     if (this.controlsEnabled) {
     const magnitude = 50.0;
     let time = performance.now();
@@ -157,14 +153,13 @@ document.addEventListener("keyup", onKeyUp, false);
     if (this.moveBackward) this.velocity.z += magnitude * delta;
     if (this.moveLeft) this.velocity.x -= magnitude * delta;
     if (this.moveRight) this.velocity.x += magnitude * delta;
-    object.translateX(this.velocity.x * delta);
+    this.controls.getObject().translateX(this.velocity.x * delta);
     //fixes bug bc y-tilt would affect x, z movement
-    object.position.y += this.velocity.y * delta;
-    object.translateZ(this.velocity.z * delta);
-      console.log(object.position.x);
-    if (object.position.y < 1) {
+    this.controls.getObject().position.y += this.velocity.y * delta;
+    this.controls.getObject().translateZ(this.velocity.z * delta);
+    if (this.controls.getObject().position.y < 1) {
       this.velocity.y = 0;
-      object.position.y = 1;
+      this.controls.getObject().position.y = 1;
       this.canJump = true;
     }
     this.prevTime = time;

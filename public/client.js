@@ -50,9 +50,9 @@ window.addEventListener("resize", () => {
 });
 
 let pointerLock = new PointerLockControls(camera);
-scene.add(pointerLock.getObject());
+scene.add(pointerLock.controls.getObject());
 
-render(pointerLock.getObject());
+render();
 
 function render() {
   renderer.render(scene, camera);
