@@ -4,6 +4,11 @@ html
     title ThreeJS Demo
     include includes/defaults.pug
   body
+    div#blocker
+      div#instructions
+        span
+          | Click to play
+          | (W, A, S, D = Move, SPACE = Jump, MOUSE = Look around)
     canvas#renderer
   include includes/scripts.pug
   script(src="client.js")
