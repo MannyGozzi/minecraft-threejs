@@ -4,8 +4,34 @@ export default class VoxelWorld {
   constructor(cellSize = 16) {
     this.cellSize = cellSize;
     this.cell = cellSize * cellSize * cellSize;
+    this.cell = new Uint8Array(cellSize * cellSize * cellSize);
   }
-
+  
+   getVoxel(x, y, z) {
+    const cell = this.getCellForVoxel(x, y, z);
+    if (!cell) {
+      return 0;
+    }
+    const {cellSize} = this;
+    const voxelX = THREE.Math.euclideanModulo(x, cellSize) | 0;
+    const voxelY = THREE.Math.euclideanModulo(y, cellSize) | 0;
+    const voxelZ = THREE.Math.euclideanModulo(z, cellSize) | 0;
+    const voxelOffset = voxelY * cellSize * cellSize +
+                        voxelZ * cellSize +
+                        voxelX;
+    return cell[voxelOffset];
+  }
+  
+  getCellForVoxel(x, y, z) {
+    const {cellSize} = this;
+    const cellX = Math.floor(x / cellSize);
+    const cellY = Math.floor(y / cellSize);
+    const cellZ = Math.floor(z / cellSize);
+    if (cellX !== 0 || cellY !== 0 || cellZ !== 0) {
+      return null
+    }
+    return this.cell;
+  }
   
   generateGeometryDataForCell(cellX, cellY, cellZ) {
     const { cellSize } = this;
@@ -38,12 +64,15 @@ export default class VoxelWorld {
                 const ndx = positions.length / 3;
                 //for every corner in the left, right, etc. direction let's add the position of the 
                 //corners of the face and add the corresponding normal (direction) for the face
+                //ndx (index) is positions/3 bc for every face there are 4 points, each point contains 3
+                //coordinates. So the indicies relate each point together. 6 indicies relate 4 points together
+                //as triangles
                 for (const pos of corners) {
-                  positions.push(pos[0] + x, pos[1] + y, pos[2] + z);
-                  normals.push(...dir);
+                  positions.push(pos[0] + x, pos[1] + y, pos[2] + z);   //add the positions for the point
+                  normals.push(...dir);    //add the normal for the first face
                 }
                 indices.push(
-                  ndx, ndx + 1, ndx + 2,
+                  ndx, ndx + 1, ndx + 2,    //relate the points by weaving 3 points into triangles
                   ndx + 2, ndx + 1, ndx + 3,
                 );
               }
