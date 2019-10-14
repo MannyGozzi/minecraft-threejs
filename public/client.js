@@ -3,6 +3,7 @@ import Ground from '/utils/ground.js';
 import PointLight from '/utils/pointLight.js';
 import AmbientLight from '/utils/ambientLight.js';
 import { ImprovedNoise } from '/utils/ImprovedNoise.js';
+import VoxelWorld from '/utils/voxelWorld.js';
 
 const renderContainer = document.querySelector("#renderer");
 const scene = new THREE.Scene();
