@@ -1,6 +1,8 @@
 import PointerLockControls from '/PointerLockControls.js';
 import Ground from '/ground.js';
 import PointLight from '/pointLight.js';
+import AmbientLight from '/ambientLight.js';
+
 const renderContainer = document.querySelector("#renderer");
 const scene = new THREE.Scene();
 scene.background = new THREE.Color("skyblue");
@@ -25,14 +27,17 @@ renderer.setPixelRatio(window.devicePixelRatio);
 
 const cube = new THREE.Mesh(
   new THREE.BoxBufferGeometry(2, 2, 2),
-  new THREE.MeshBasicMaterial()
+  new THREE.MeshLambertMaterial()
 );
-cube.position.y += 2;
+cube.position.y += 1;
 scene.add(cube);
 
 const ground = Ground();
 scene.add(ground);
-const pointLight = 
+const pointLight = PointLight();
+scene.add(pointLight);
+const ambientLight = AmbientLight();
+scene.add(ambientLight);
 
 window.addEventListener("resize", () => {
   const width = window.innerWidth;
@@ -51,8 +56,6 @@ render();
 
 function render() {
   renderer.render(scene, camera);
-  cube.rotation.y += 0.01;
-  cube.rotation.x += 0.01;
   pointerLock.update();
   window.requestAnimationFrame(render);
 }
