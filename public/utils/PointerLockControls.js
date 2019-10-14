@@ -16,7 +16,7 @@ export default class PointerLockControls {
     this.raycaster;
     this.direction = new THREE.Vector3();
     this.vertex = new THREE.Vector3();
-    this.raycaster = new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( 0, - 1, 0 ), 0, 10 );
+    this.raycaster = new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( 0, - 1, 0 ), 0, 1 );
 
     
     let blocker = document.getElementById("blocker");
@@ -151,47 +151,48 @@ document.addEventListener("keyup", onKeyUp, false);
   setObjects(objects) {
     this.objects = objects;
   }
+  
+  pushIntersectObject(object) {
+    this.objects.push(object);
+  }
 
   update() {
     if (this.controlsEnabled) {
-    const magnitude = 50.0;
-    const time = performance.now();
-    const delta = (time - this.prevTime) / 1000;
-    const intersections = this.raycaster.intersectObjects( this.objects );
-    const onObject = intersections.length > 0;
-    this.raycaster.ray.origin.copy( this.controls.getObject().position );
-    this.raycaster.ray.origin.y -= 10;
-    
+      const speed = 50.0;
+      const time = performance.now();
+      const delta = (time - this.prevTime) / 1000;
+      const intersections = this.raycaster.intersectObjects( this.objects );
+      const onObject = intersections.length > 0;
+      this.raycaster.ray.origin.copy( this.controls.getObject().position );
+      this.raycaster.ray.origin.y -= 0.5;
 
-    this.velocity.x -= this.velocity.x * 10.0 * delta;
-					this.velocity.z -= this.velocity.z * 10.0 * delta;
-					this.velocity.y -= 9.8 * 100.0 * delta; // 100.0 = mass
-					this.direction.z = Number( this.moveForward ) - Number( this.moveBackward );
-					this.direction.x = Number( this.moveRight ) - Number( this.moveLeft );
-					this.direction.normalize(); // this ensures consistent movements in all directions
-					if ( this.moveForward || this.moveBackward ) this.velocity.z -= this.direction.z * 400.0 * delta;
-					if ( this.moveLeft || this.moveRight ) this.velocity.x -= this.direction.x * 400.0 * delta;
-					if ( onObject === true ) {
-						this.velocity.y = Math.max( 0, this.velocity.y );
-						this.canJump = true;
-					}
-					this.controls.moveRight( - this.velocity.x * delta );
-					this.controls.moveForward( - this.velocity.z * delta );
-					this.controls.getObject().position.y += ( this.velocity.y * delta ); // new behavior
-					if ( this.controls.getObject().position.y < 1 ) {
-						this.velocity.y = 0;
-						this.controls.getObject().position.y = 1;
-						this.canJump = true;
-					}
-      
-   let info = document.querySelector('.info');
-      info.innerHTML = `x: ${this.object.position.x} <br>
-                                         y: ${this.object.position.y} <br>
-                                         z: ${this.object.position.z}`;
-    this.prevTime = time;
+
+      this.velocity.x -= this.velocity.x * 10.0 * delta;
+      this.velocity.z -= this.velocity.z * 10.0 * delta;
+      this.velocity.y -= 9.8 * 10 * delta; // 100.0 = mass
+      this.direction.z = Number( this.moveForward ) - Number( this.moveBackward );
+      this.direction.x = Number( this.moveRight ) - Number( this.moveLeft );
+      this.direction.normalize(); // this ensures consistent movements in all directions
+      if ( this.moveForward || this.moveBackward ) this.velocity.z -= this.direction.z * speed * delta;
+      if ( this.moveLeft || this.moveRight ) this.velocity.x -= this.direction.x * speed * delta;
+      if ( onObject === true ) {
+        this.velocity.y = Math.max( 0, this.velocity.y );
+        this.canJump = true;
+      }
+      this.controls.moveRight( - this.velocity.x * delta );
+      this.controls.moveForward( - this.velocity.z * delta );
+      this.controls.getObject().position.y += ( this.velocity.y * delta ); // new behavior
+      if ( this.controls.getObject().position.y < 1 ) {
+        this.velocity.y = 0;
+        this.controls.getObject().position.y = 1;
+        this.canJump = true;
+      }
+
+     let info = document.querySelector('.info');
+        info.innerHTML = `x: ${this.object.position.x} <br>
+                                           y: ${this.object.position.y} <br>
+                                           z: ${this.object.position.z}`;
+      this.prevTime = time;
+    }
   }
-  }
-
-
-
 }
