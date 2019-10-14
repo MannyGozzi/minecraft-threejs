@@ -3,7 +3,7 @@ export default class VoxelWorld {
   
   constructor(cellSize = 16) {
     this.cellSize = cellSize;
-    this.cell = cellSize * cellSize * cellSize;
+    this.cellSliceSize = cellSize * cellSize;
     this.cell = new Uint8Array(cellSize * cellSize * cellSize);
   }
   
@@ -12,13 +12,7 @@ export default class VoxelWorld {
     if (!cell) {
       return 0;
     }
-    const {cellSize} = this;
-    const voxelX = THREE.Math.euclideanModulo(x, cellSize) | 0;
-    const voxelY = THREE.Math.euclideanModulo(y, cellSize) | 0;
-    const voxelZ = THREE.Math.euclideanModulo(z, cellSize) | 0;
-    const voxelOffset = voxelY * cellSize * cellSize +
-                        voxelZ * cellSize +
-                        voxelX;
+    const voxelOffset = this.computeVoxelOffset(x, y, z);
     return cell[voxelOffset];
   }
   
@@ -31,6 +25,25 @@ export default class VoxelWorld {
       return null
     }
     return this.cell;
+  }
+  
+    setVoxel(x, y, z, v) {
+    let cell = this.getCellForVoxel(x, y, z);
+    if (!cell) {
+      return;  // TODO: add a new cell?
+    }
+    const voxelOffset = this.computeVoxelOffset(x, y, z);
+    cell[voxelOffset] = v;
+  }
+  
+  computeVoxelOffset(x, y, z) {
+    const {cellSize, cellSliceSize} = this;
+    const voxelX = THREE.Math.euclideanModulo(x, cellSize) | 0;
+    const voxelY = THREE.Math.euclideanModulo(y, cellSize) | 0;
+    const voxelZ = THREE.Math.euclideanModulo(z, cellSize) | 0;
+    return voxelY * cellSliceSize +
+           voxelZ * cellSize +
+           voxelX;
   }
   
   generateGeometryDataForCell(cellX, cellY, cellZ) {
@@ -53,7 +66,7 @@ export default class VoxelWorld {
           if (voxel) {
               for (const {dir, corners} of VoxelWorld.faces) {
               //check for voxels to left, right, bottom, top, back, and front
-              const neighbor = getVoxel(
+              const neighbor = this.getVoxel(
                 voxelX + dir[0],
                 voxelY + dir[1],
                 voxelZ + dir[2]

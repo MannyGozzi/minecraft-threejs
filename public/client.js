@@ -13,7 +13,7 @@ scene.background = new THREE.Color("lightblue");
 const fov = 90; // AKA Field of View
 const aspect = window.innerWidth / window.innerHeight;
 const near = 0.1; // the near clipping plane
-const far = 100; // the far clipping plane
+const far = 1000; // the far clipping plane
 const camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
 // we'll move the camera back a bit so that we can view the scene
 camera.position.set(0, 0, 5);
@@ -43,6 +43,38 @@ const pointLight = PointLight();
 scene.add(pointLight);
 const ambientLight = AmbientLight();
 scene.add(ambientLight);
+
+//VOXEL WORLD CREATION
+const cellSize = 16;
+ 
+const world = new VoxelWorld(cellSize);
+ 
+for (let y = 0; y < cellSize; ++y) {
+  for (let z = 0; z < cellSize; ++z) {
+    for (let x = 0; x < cellSize; ++x) {
+      const height = (Math.sin(x / cellSize * Math.PI * 2) + Math.sin(z / cellSize * Math.PI * 3)) * (cellSize / 6) + (cellSize / 2);
+      if (y < height) {
+        world.setVoxel(x, y, z, 1);
+      }
+    }
+  }
+}
+
+const {positions, normals, indices} = world.generateGeometryDataForCell(0, 0, 0);
+const geometry = new THREE.BufferGeometry();
+const material = new THREE.MeshLambertMaterial({color: 'green'});
+ 
+const positionNumComponents = 3;
+const normalNumComponents = 3;
+geometry.addAttribute(
+    'position',
+    new THREE.BufferAttribute(new Float32Array(positions), positionNumComponents));
+geometry.addAttribute(
+    'normal',
+    new THREE.BufferAttribute(new Float32Array(normals), normalNumComponents));
+geometry.setIndex(indices);
+const mesh = new THREE.Mesh(geometry, material);
+scene.add(mesh);
 
 //resize canvas if window size is changed
 window.addEventListener("resize", () => {
