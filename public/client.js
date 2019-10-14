@@ -26,10 +26,10 @@ renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.setPixelRatio(window.devicePixelRatio);
 
 const cube = new THREE.Mesh(
-  new THREE.BoxBufferGeometry(2, 2, 2),
+  new THREE.BoxBufferGeometry(0.8, 0.8, 0.8),
   new THREE.MeshLambertMaterial()
 );
-cube.position.y += 1;
+cube.position.y += 0.4;
 scene.add(cube);
 
 const ground = Ground();
