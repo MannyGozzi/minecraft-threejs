@@ -11,6 +11,8 @@ export default class PointerLockControls {
     this.velocity = new THREE.Vector3();
     this.controls = new THREE.PointerLockControls(camera);
     this.object = this.controls.getObject();
+    			this objects = [];
+			var raycaster;
     
     let blocker = document.getElementById("blocker");
 let instructions = document.getElementById("instructions");
