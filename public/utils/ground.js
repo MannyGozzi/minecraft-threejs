@@ -7,7 +7,7 @@ export default function Ground() {
   texture.repeat.set( 4, 4 );   //how often to wrap texture
 
   const ground = new THREE.Mesh(
-    new THREE.PlaneGeometry(20, 20),
+    new THREE.PlaneBufferGeometry(20, 20),
     new THREE.MeshBasicMaterial({ side: THREE.DoubleSide, map: texture })
   );
   ground.rotation.x += Math.PI / 2;
