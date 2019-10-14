@@ -1,41 +1,9 @@
-export default class VoxelWorld {
-  
-  
-  constructor(cellSize = 16) {
+class VoxelWorld {
+  constructor(cellSize) {
     this.cellSize = cellSize;
     this.cellSliceSize = cellSize * cellSize;
     this.cell = new Uint8Array(cellSize * cellSize * cellSize);
   }
-  
-   getVoxel(x, y, z) {
-    const cell = this.getCellForVoxel(x, y, z);
-    if (!cell) {
-      return 0;
-    }
-    const voxelOffset = this.computeVoxelOffset(x, y, z);
-    return cell[voxelOffset];
-  }
-  
-  getCellForVoxel(x, y, z) {
-    const {cellSize} = this;
-    const cellX = Math.floor(x / cellSize);
-    const cellY = Math.floor(y / cellSize);
-    const cellZ = Math.floor(z / cellSize);
-    if (cellX !== 0 || cellY !== 0 || cellZ !== 0) {
-      return null
-    }
-    return this.cell;
-  }
-  
-    setVoxel(x, y, z, v) {
-    let cell = this.getCellForVoxel(x, y, z);
-    if (!cell) {
-      return;  // TODO: add a new cell?
-    }
-    const voxelOffset = this.computeVoxelOffset(x, y, z);
-    cell[voxelOffset] = v;
-  }
-  
   computeVoxelOffset(x, y, z) {
     const {cellSize, cellSliceSize} = this;
     const voxelX = THREE.Math.euclideanModulo(x, cellSize) | 0;
@@ -45,9 +13,34 @@ export default class VoxelWorld {
            voxelZ * cellSize +
            voxelX;
   }
-  
+  getCellForVoxel(x, y, z) {
+    const {cellSize} = this;
+    const cellX = Math.floor(x / cellSize);
+    const cellY = Math.floor(y / cellSize);
+    const cellZ = Math.floor(z / cellSize);
+    if (cellX !== 0 || cellY !== 0 || cellZ !== 0) {
+      return null;
+    }
+    return this.cell;
+  }
+  setVoxel(x, y, z, v) {
+    const cell = this.getCellForVoxel(x, y, z);
+    if (!cell) {
+      return;  // TODO: add a new cell?
+    }
+    const voxelOffset = this.computeVoxelOffset(x, y, z);
+    cell[voxelOffset] = v;
+  }
+  getVoxel(x, y, z) {
+    const cell = this.getCellForVoxel(x, y, z);
+    if (!cell) {
+      return 0;
+    }
+    const voxelOffset = this.computeVoxelOffset(x, y, z);
+    return cell[voxelOffset];
+  }
   generateGeometryDataForCell(cellX, cellY, cellZ) {
-    const { cellSize } = this;
+    const {cellSize} = this;
     const positions = [];
     const normals = [];
     const indices = [];
@@ -62,30 +55,22 @@ export default class VoxelWorld {
         for (let x = 0; x < cellSize; ++x) {
           const voxelX = startX + x;
           const voxel = this.getVoxel(voxelX, voxelY, voxelZ);
-          //if there is a voxel there then lets check if we need to get rid of faces
           if (voxel) {
-              for (const {dir, corners} of VoxelWorld.faces) {
-              //check for voxels to left, right, bottom, top, back, and front
+            // There is a voxel here but do we need faces for it?
+            for (const {dir, corners} of VoxelWorld.faces) {
               const neighbor = this.getVoxel(
-                voxelX + dir[0],
-                voxelY + dir[1],
-                voxelZ + dir[2]
-              );
+                  voxelX + dir[0],
+                  voxelY + dir[1],
+                  voxelZ + dir[2]);
               if (!neighbor) {
-                // this voxel has no neighbor in this direction so we need a face here
-                //index for the unique face points
+                // this voxel has no neighbor in this direction so we need a face.
                 const ndx = positions.length / 3;
-                //for every corner in the left, right, etc. direction let's add the position of the 
-                //corners of the face and add the corresponding normal (direction) for the face
-                //ndx (index) is positions/3 bc for every face there are 4 points, each point contains 3
-                //coordinates. So the indicies relate each point together. 6 indicies relate 4 points together
-                //as triangles
                 for (const pos of corners) {
-                  positions.push(pos[0] + x, pos[1] + y, pos[2] + z);   //add the positions for the point
-                  normals.push(...dir);    //add the normal for the first face
+                  positions.push(pos[0] + x, pos[1] + y, pos[2] + z);
+                  normals.push(...dir);
                 }
                 indices.push(
-                  ndx, ndx + 1, ndx + 2,    //relate the points by weaving 3 points into triangles
+                  ndx, ndx + 1, ndx + 2,
                   ndx + 2, ndx + 1, ndx + 3,
                 );
               }
@@ -93,15 +78,14 @@ export default class VoxelWorld {
           }
         }
       }
-      return {
-        positions,
-        normals,
-        indices,
-      };
     }
+
+    return {
+      positions,
+      normals,
+      indices,
+    };
   }
-  
-  
 }
 
 VoxelWorld.faces = [
@@ -160,3 +144,5 @@ VoxelWorld.faces = [
     ],
   },
 ];
+
+export default VoxelWorld;
