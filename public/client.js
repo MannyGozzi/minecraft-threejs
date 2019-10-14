@@ -2,10 +2,11 @@ import PointerLockControls from '/utils/PointerLockControls.js';
 import Ground from '/utils/ground.js';
 import PointLight from '/utils/pointLight.js';
 import AmbientLight from '/utils/ambientLight.js';
+import { ImprovedNoise } from '/utils/ImprovedNoise.js';
 
 const renderContainer = document.querySelector("#renderer");
 const scene = new THREE.Scene();
-scene.background = new THREE.Color("skyblue");
+scene.background = new THREE.Color("lightblue");
 
 // Create a Camera
 const fov = 90; // AKA Field of View
@@ -17,7 +18,6 @@ const camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
 camera.position.set(0, 0, 5);
 
 let objects = [];
-
 
 //initialize the renderer
 const renderer = new THREE.WebGLRenderer({
