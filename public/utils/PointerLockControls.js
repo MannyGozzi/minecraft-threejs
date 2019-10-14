@@ -165,7 +165,7 @@ document.addEventListener("keyup", onKeyUp, false);
       const intersections = this.raycaster.intersectObjects( this.objects );
       const onObject = intersections.length > 0;
       this.raycaster.ray.origin.copy( this.controls.getObject().position );
-      this.raycaster.ray.origin.y -= 0.5;
+      this.raycaster.ray.origin.y -= 0;
 
 
       this.velocity.x -= this.velocity.x * 10.0 * delta;
