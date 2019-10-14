@@ -11,12 +11,13 @@ export default class PointerLockControls {
     this.velocity = new THREE.Vector3();
     this.controls = new THREE.PointerLockControls(camera);
     this.object = this.controls.getObject();
+    this.object.position.y += 1;
     
     this.objects = [];
     this.raycaster;
     this.direction = new THREE.Vector3();
     this.vertex = new THREE.Vector3();
-    this.raycaster = new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( 0, - 1, 0 ), 0, 1 );
+    this.raycaster = new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( 0, - 1, 0 ), 0, 2 );
 
     
     let blocker = document.getElementById("blocker");
@@ -182,11 +183,6 @@ document.addEventListener("keyup", onKeyUp, false);
       this.controls.moveRight( - this.velocity.x * delta );
       this.controls.moveForward( - this.velocity.z * delta );
       this.controls.getObject().position.y += ( this.velocity.y * delta ); // new behavior
-      if ( this.controls.getObject().position.y < 1 ) {
-        this.velocity.y = 0;
-        this.controls.getObject().position.y = 1;
-        this.canJump = true;
-      }
 
      let info = document.querySelector('.info');
         info.innerHTML = `x: ${this.object.position.x} <br>
