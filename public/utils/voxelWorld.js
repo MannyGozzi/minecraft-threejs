@@ -34,10 +34,10 @@ export default class VoxelWorld {
               );
               if (!neighbor) {
                 // this voxel has no neighbor in this direction so we need a face here
-                //
+                //index for the unique face points
                 const ndx = positions.length / 3;
                 //for every corner in the left, right, etc. direction let's add the position of the 
-                //corners of the face and add the corresponding normal for the face
+                //corners of the face and add the corresponding normal (direction) for the face
                 for (const pos of corners) {
                   positions.push(pos[0] + x, pos[1] + y, pos[2] + z);
                   normals.push(...dir);
