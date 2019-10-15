@@ -47,7 +47,7 @@ scene.add(ambientLight);
 const cellSize = 16;
 const loader = new THREE.TextureLoader();
 const texture = loader.load(
-  "https://cdn.glitch.com/09b41b8e-5b1b-470e-8b60-eeaccaea49e9%2Ftexture_atlas_edited.png?v=1571100335299",
+  "https://cdn.glitch.com/09b41b8e-5b1b-470e-8b60-eeaccaea49e9%2Ftexture_atlas_edited.png?v=1571101105343",
   render
 );
 texture.magFilter = THREE.NearestFilter;
