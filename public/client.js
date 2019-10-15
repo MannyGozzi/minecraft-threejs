@@ -37,8 +37,6 @@ cube.position.y += 0.7;
 scene.add(cube);
 
 //add 3d elements to the world
-const ground = Ground();
-scene.add(ground);
 const pointLight = PointLight();
 scene.add(pointLight);
 const ambientLight = AmbientLight();
@@ -74,6 +72,8 @@ geometry.addAttribute(
     new THREE.BufferAttribute(new Float32Array(normals), normalNumComponents));
 geometry.setIndex(indices);
 const mesh = new THREE.Mesh(geometry, material);
+mesh.position.y -= cellSize/2;
+mesh.position.x -= cellSize/2;
 scene.add(mesh);
 
 //resize canvas if window size is changed
@@ -91,7 +91,7 @@ let pointerLock = new PointerLockControls(camera);
 scene.add(pointerLock.controls.getObject());
 
 pointerLock.pushIntersectObject(cube);
-pointerLock.pushIntersectObject(ground);
+pointerLock.pushIntersectObject(mesh);
 
 
 render();
