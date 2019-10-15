@@ -155,9 +155,9 @@ pointerLock.pushIntersectObject(ground);
 
     const {positions, normals, uvs, indices} = world.generateGeometryDataForCell(cellX, cellY, cellZ);
     const geometry = mesh.geometry;
-    geometry.getAttribute('position').setArray(new Float32Array(positions)).needsUpdate = true;
-    geometry.getAttribute('normal').setArray(new Float32Array(normals)).needsUpdate = true;
-    geometry.getAttribute('uv').setArray(new Float32Array(uvs)).needsUpdate = true;
+    geometry['position'] = (new Float32Array(positions)).needsUpdate = true;
+    geometry['normal'] = (new Float32Array(normals)).needsUpdate = true;
+    geometry['uv'] = (new Float32Array(uvs)).needsUpdate = true;
     geometry.setIndex(indices);
     geometry.computeBoundingSphere();
   }
@@ -256,7 +256,7 @@ pointerLock.pushIntersectObject(ground);
   }
 
   function getCanvasRelativePosition(event) {
-    const rect = canvas.getBoundingClientRect();
+    const rect = renderContainer.getBoundingClientRect();
     return {
       x: event.clientX - rect.left,
       y: event.clientY - rect.top,
@@ -265,8 +265,8 @@ pointerLock.pushIntersectObject(ground);
 
   function placeVoxel(event) {
     const pos = getCanvasRelativePosition(event);
-    const x = (pos.x / canvas.clientWidth ) *  2 - 1;
-    const y = (pos.y / canvas.clientHeight) * -2 + 1;  // note we flip Y
+    const x = (pos.x / renderContainer.clientWidth ) *  2 - 1;
+    const y = (pos.y / renderContainer.clientHeight) * -2 + 1;  // note we flip Y
 
     const start = new THREE.Vector3();
     const end = new THREE.Vector3();
@@ -311,28 +311,28 @@ pointerLock.pushIntersectObject(ground);
     window.removeEventListener('mousemove', recordMovement);
     window.removeEventListener('mouseup', placeVoxelIfNoMovement);
   }
-  canvas.addEventListener('mousedown', (event) => {
+  renderContainer.addEventListener('mousedown', (event) => {
     event.preventDefault();
     recordStartPosition(event);
     window.addEventListener('mousemove', recordMovement);
     window.addEventListener('mouseup', placeVoxelIfNoMovement);
   }, {passive: false});
-  canvas.addEventListener('touchstart', (event) => {
+  renderContainer.addEventListener('touchstart', (event) => {
     event.preventDefault();
     recordStartPosition(event.touches[0]);
   }, {passive: false});
-  canvas.addEventListener('touchmove', (event) => {
+  renderContainer.addEventListener('touchmove', (event) => {
     event.preventDefault();
     recordMovement(event.touches[0]);
   }, {passive: false});
-  canvas.addEventListener('touchend', () => {
+  renderContainer.addEventListener('touchend', () => {
     placeVoxelIfNoMovement({
       clientX: mouse.x,
       clientY: mouse.y,
     });
   });
 
-  controls.addEventListener('change', requestRenderIfNotRequested);
+  renderContainer.addEventListener('change', requestRenderIfNotRequested);
   window.addEventListener('resize', requestRenderIfNotRequested);
 
 render();
