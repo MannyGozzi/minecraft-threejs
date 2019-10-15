@@ -46,7 +46,7 @@ scene.add(ambientLight);
 //VOXEL WORLD CREATION
 const cellSize = 32;
 const loader = new THREE.TextureLoader();
-  const texture = loader.load('https://threejsfundamentals.org/threejs/resources/images/minecraft/flourish-cc-by-nc-sa.png', render);
+  const texture = loader.load('https://cdn.glitch.com/09b41b8e-5b1b-470e-8b60-eeaccaea49e9%2Ftexture_atlas_edited.png?v=1571101403046', render);
   texture.magFilter = THREE.NearestFilter;
   texture.minFilter = THREE.NearestFilter;
 
