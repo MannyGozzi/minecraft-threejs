@@ -1,9 +1,9 @@
-import PointerLockControls from '/utils/PointerLockControls.js';
-import Ground from '/utils/ground.js';
-import PointLight from '/utils/pointLight.js';
-import AmbientLight from '/utils/ambientLight.js';
-import { ImprovedNoise } from '/utils/ImprovedNoise.js';
-import VoxelWorld from '/utils/voxelWorld.js';
+import PointerLockControls from "/utils/PointerLockControls.js";
+import Ground from "/utils/ground.js";
+import PointLight from "/utils/pointLight.js";
+import AmbientLight from "/utils/ambientLight.js";
+import { ImprovedNoise } from "/utils/ImprovedNoise.js";
+import VoxelWorld from "/utils/voxelWorld.js";
 
 const renderContainer = document.querySelector("#renderer");
 const scene = new THREE.Scene();
@@ -28,7 +28,6 @@ const renderer = new THREE.WebGLRenderer({
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.setPixelRatio(window.devicePixelRatio);
 
-
 const cube = new THREE.Mesh(
   new THREE.BoxBufferGeometry(0.8, 0.8, 0.8),
   new THREE.MeshLambertMaterial()
@@ -37,7 +36,7 @@ cube.position.y += 0.7;
 scene.add(cube);
 
 //add 3d elements to the world
-const ground = Grount();
+const ground = Ground();
 scene.add(ground);
 const pointLight = PointLight();
 scene.add(pointLight);
@@ -45,62 +44,76 @@ const ambientLight = AmbientLight();
 scene.add(ambientLight);
 
 //VOXEL WORLD CREATION
-  const cellSize = 32;
+const cellSize = 16;
 const loader = new THREE.TextureLoader();
-  const texture = loader.load('https://threejsfundamentals.org/threejs/resources/images/minecraft/flourish-cc-by-nc-sa.png', render);
-  texture.magFilter = THREE.NearestFilter;
-  texture.minFilter = THREE.NearestFilter;
+const texture = loader.load(
+  "https://cdn.glitch.com/09b41b8e-5b1b-470e-8b60-eeaccaea49e9%2Ftexture_atlas.png?v=1571099738154",
+  render
+);
+texture.magFilter = THREE.NearestFilter;
+texture.minFilter = THREE.NearestFilter;
 
-  const tileSize = 16;
-  const tileTextureWidth = 256;
-  const tileTextureHeight = 64;
-  const world = new VoxelWorld({
-    cellSize,
-    tileSize,
-    tileTextureWidth,
-    tileTextureHeight,
-  });
+const tileSize = 16;
+const tileTextureWidth = 256;
+const tileTextureHeight = 64;
+const world = new VoxelWorld({
+  cellSize,
+  tileSize,
+  tileTextureWidth,
+  tileTextureHeight
+});
 
-  for (let y = 0; y < cellSize; ++y) {
-    for (let z = 0; z < cellSize; ++z) {
-      for (let x = 0; x < cellSize; ++x) {
-        const height = (Math.sin(x / cellSize * Math.PI * 2) + Math.sin(z / cellSize * Math.PI * 3)) * (cellSize / 6) + (cellSize / 2);
-        if (y < height) {
-          world.setVoxel(x, y, z, randInt(1, 17));
-        }
+for (let y = 0; y < cellSize; ++y) {
+  for (let z = 0; z < cellSize; ++z) {
+    for (let x = 0; x < cellSize; ++x) {
+      const height =
+        (Math.sin((x / cellSize) * Math.PI * 2) +
+          Math.sin((z / cellSize) * Math.PI * 3)) *
+          (cellSize / 6) +
+        cellSize / 2;
+      if (y < height) {
+        world.setVoxel(x, y, z, randInt(1, 17));
       }
     }
   }
+}
 
-  function randInt(min, max) {
-    return Math.floor(Math.random() * (max - min) + min);
-  }
+function randInt(min, max) {
+  return Math.floor(Math.random() * (max - min) + min);
+}
 
-  const {positions, normals, uvs, indices} = world.generateGeometryDataForCell(0, 0, 0);
-  const geometry = new THREE.BufferGeometry();
-  const material = new THREE.MeshLambertMaterial({
-    map: texture,
-    side: THREE.DoubleSide,
-    alphaTest: 0.1,
-    transparent: true,
-  });
+const { positions, normals, uvs, indices } = world.generateGeometryDataForCell(
+  0,
+  0,
+  0
+);
+const geometry = new THREE.BufferGeometry();
+const material = new THREE.MeshLambertMaterial({
+  map: texture,
+  side: THREE.DoubleSide,
+  alphaTest: 0.1,
+  transparent: true
+});
 
-  const positionNumComponents = 3;
-  const normalNumComponents = 3;
-  const uvNumComponents = 2;
-  geometry.addAttribute(
-      'position',
-      new THREE.BufferAttribute(new Float32Array(positions), positionNumComponents));
-  geometry.addAttribute(
-      'normal',
-      new THREE.BufferAttribute(new Float32Array(normals), normalNumComponents));
-  geometry.addAttribute(
-      'uv',
-      new THREE.BufferAttribute(new Float32Array(uvs), uvNumComponents));
-  geometry.setIndex(indices);
+const positionNumComponents = 3;
+const normalNumComponents = 3;
+const uvNumComponents = 2;
+geometry.addAttribute(
+  "position",
+  new THREE.BufferAttribute(new Float32Array(positions), positionNumComponents)
+);
+geometry.addAttribute(
+  "normal",
+  new THREE.BufferAttribute(new Float32Array(normals), normalNumComponents)
+);
+geometry.addAttribute(
+  "uv",
+  new THREE.BufferAttribute(new Float32Array(uvs), uvNumComponents)
+);
+geometry.setIndex(indices);
 const mesh = new THREE.Mesh(geometry, material);
-mesh.position.y -= cellSize*2;
-mesh.position.x -= cellSize/2;
+mesh.position.y -= cellSize;
+mesh.position.x -= cellSize / 2;
 scene.add(mesh);
 
 //resize canvas if window size is changed
@@ -119,7 +132,7 @@ scene.add(pointerLock.controls.getObject());
 
 pointerLock.pushIntersectObject(cube);
 pointerLock.pushIntersectObject(mesh);
-
+pointerLock.pushIntersectObject(ground);
 
 render();
 
