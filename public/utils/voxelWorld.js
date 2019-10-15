@@ -76,7 +76,7 @@ class VoxelWorld {
                   normals.push(...dir);
                   uvs.push(                                                                                     //uv voxel is an int that corresponds to it's texture type e.g. grass = 5, cobblestone = 10 | not actual indexes
                     ((uvVoxel + uv[0]) * tileSize) / tileTextureWidth,              //u coordinate (x-coordinate) for uv map | divided by width bc uv's are normalized
-                    ((uvRow +  uv[1]) * tileSize) / tileTextureHeight    //v coordinate (y-coordinate) for uv map | divided by height bc uv's are normalized
+                    1 - ((uvRow + 1 -  uv[1]) * tileSize) / tileTextureHeight   //v coordinate (y-coordinate) for uv map | divided by height bc uv's are normalized
                   );
                 }
                 indices.push(ndx, ndx + 1, ndx + 2, ndx + 2, ndx + 1, ndx + 3);

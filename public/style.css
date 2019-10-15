@@ -31,3 +31,25 @@ canvas {
   position: absolute;
   margin: 0.5em;
 }
+#ui {
+    position: absolute;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.8);
+    padding: 0.1em;
+}
+#ui input[type=radio] {
+  width: 0;
+  height: 0;
+  display: none;
+}
+#ui input[type=radio] + label {
+  background-image: url('https://cdn.glitch.com/09b41b8e-5b1b-470e-8b60-eeaccaea49e9%2Ftexture_atlas_edited.png?v=1571104174274');
+  background-size: cover;
+  image-rendering: pixelated;
+  width: 10vw;
+  height: 10vw;
+  display: inline-block;
+}
+#ui input[type=radio]:checked + label {
+  outline: 3px solid red;
+}
