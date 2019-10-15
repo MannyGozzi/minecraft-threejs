@@ -35,6 +35,8 @@ canvas {
     position: absolute;
     bottom: 0;
     background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    justify-content: center;
     padding: 0.1em;
 }
 #ui input[type=radio] {
@@ -44,7 +46,7 @@ canvas {
 }
 #ui input[type=radio] + label {
   background-image: url('https://cdn.glitch.com/09b41b8e-5b1b-470e-8b60-eeaccaea49e9%2Ftexture_atlas_edited.png?v=1571104174274');
-  background-size: cover;
+  background-size: 1600% 400%;
   image-rendering: pixelated;
   width: 10vw;
   height: 10vw;
