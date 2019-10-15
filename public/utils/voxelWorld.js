@@ -4,21 +4,19 @@ class VoxelWorld {
     this.tileSize = options.tileSize;
     this.tileTextureWidth = options.tileTextureWidth;
     this.tileTextureHeight = options.tileTextureHeight;
-    const {cellSize} = this;
+    const { cellSize } = this;
     this.cellSliceSize = cellSize * cellSize;
     this.cell = new Uint8Array(cellSize * cellSize * cellSize);
   }
   computeVoxelOffset(x, y, z) {
-    const {cellSize, cellSliceSize} = this;
+    const { cellSize, cellSliceSize } = this;
     const voxelX = THREE.Math.euclideanModulo(x, cellSize) | 0;
     const voxelY = THREE.Math.euclideanModulo(y, cellSize) | 0;
     const voxelZ = THREE.Math.euclideanModulo(z, cellSize) | 0;
-    return voxelY * cellSliceSize +
-           voxelZ * cellSize +
-           voxelX;
+    return voxelY * cellSliceSize + voxelZ * cellSize + voxelX;
   }
   getCellForVoxel(x, y, z) {
-    const {cellSize} = this;
+    const { cellSize } = this;
     const cellX = Math.floor(x / cellSize);
     const cellY = Math.floor(y / cellSize);
     const cellZ = Math.floor(z / cellSize);
@@ -30,7 +28,7 @@ class VoxelWorld {
   setVoxel(x, y, z, v) {
     const cell = this.getCellForVoxel(x, y, z);
     if (!cell) {
-      return;  // TODO: add a new cell?
+      return; // TODO: add a new cell?
     }
     const voxelOffset = this.computeVoxelOffset(x, y, z);
     cell[voxelOffset] = v;
@@ -44,7 +42,7 @@ class VoxelWorld {
     return cell[voxelOffset];
   }
   generateGeometryDataForCell(cellX, cellY, cellZ) {
-    const {cellSize, tileSize, tileTextureWidth, tileTextureHeight} = this;
+    const { cellSize, tileSize, tileTextureWidth, tileTextureHeight } = this;
     const positions = [];
     const normals = [];
     const uvs = [];
@@ -64,25 +62,24 @@ class VoxelWorld {
             // voxel 0 is sky (empty) so for UVs we start at 0
             const uvVoxel = voxel - 1;
             // There is a voxel here but do we need faces for it?
-            for (const {dir, corners, uvRow} of VoxelWorld.faces) {
+            for (const { dir, corners, uvRow } of VoxelWorld.faces) {
               const neighbor = this.getVoxel(
-                  voxelX + dir[0],
-                  voxelY + dir[1],
-                  voxelZ + dir[2]);
+                voxelX + dir[0],
+                voxelY + dir[1],
+                voxelZ + dir[2]
+              );
               if (!neighbor) {
                 // this voxel has no neighbor in this direction so we need a face.
                 const ndx = positions.length / 3;
-                for (const {pos, uv} of corners) {
+                for (const { pos, uv } of corners) {
                   positions.push(pos[0] + x, pos[1] + y, pos[2] + z);
                   normals.push(...dir);
                   uvs.push(
-                        (uvVoxel +     uv[0]) * tileSize / tileTextureWidth,
-                    1 - (uvRow + 1 - uv[1]) * tileSize / tileTextureHeight);
+                    ((uvVoxel + uv[0]) * tileSize) / tileTextureWidth,
+                    1 - ((uvRow + 1 - uv[1]) * tileSize) / tileTextureHeight
+                  );
                 }
-                indices.push(
-                  ndx, ndx + 1, ndx + 2,
-                  ndx + 2, ndx + 1, ndx + 3,
-                );
+                indices.push(ndx, ndx + 1, ndx + 2, ndx + 2, ndx + 1, ndx + 3);
               }
             }
           }
@@ -94,72 +91,78 @@ class VoxelWorld {
       positions,
       normals,
       uvs,
-      indices,
+      indices
     };
   }
 }
 
 VoxelWorld.faces = [
-  { // left
+  {
+    // left
     uvRow: 0,
-    dir: [ -1,  0,  0, ],
+    dir: [-1, 0, 0],
     corners: [
-      { pos: [ 0, 1, 0 ], uv: [ 0, 1 ], },
-      { pos: [ 0, 0, 0 ], uv: [ 0, 0 ], },
-      { pos: [ 0, 1, 1 ], uv: [ 1, 1 ], },
-      { pos: [ 0, 0, 1 ], uv: [ 1, 0 ], },
-    ],
+      { pos: [0, 1, 0], uv: [0, 1] },
+      { pos: [0, 0, 0], uv: [0, 0] },
+      { pos: [0, 1, 1], uv: [1, 1] },
+      { pos: [0, 0, 1], uv: [1, 0] }
+    ]
   },
-  { // right
+  {
+    // right
     uvRow: 0,
-    dir: [  1,  0,  0, ],
+    dir: [1, 0, 0],
     corners: [
-      { pos: [ 1, 1, 1 ], uv: [ 0, 1 ], },
-      { pos: [ 1, 0, 1 ], uv: [ 0, 0 ], },
-      { pos: [ 1, 1, 0 ], uv: [ 1, 1 ], },
-      { pos: [ 1, 0, 0 ], uv: [ 1, 0 ], },
-    ],
+      { pos: [1, 1, 1], uv: [0, 1] },
+      { pos: [1, 0, 1], uv: [0, 0] },
+      { pos: [1, 1, 0], uv: [1, 1] },
+      { pos: [1, 0, 0], uv: [1, 0] }
+    ]
   },
-  { // bottom
+  {
+    // bottom
     uvRow: 1,
-    dir: [  0, -1,  0, ],
+    dir: [0, -1, 0],
     corners: [
-      { pos: [ 1, 0, 1 ], uv: [ 1, 0 ], },
-      { pos: [ 0, 0, 1 ], uv: [ 0, 0 ], },
-      { pos: [ 1, 0, 0 ], uv: [ 1, 1 ], },
-      { pos: [ 0, 0, 0 ], uv: [ 0, 1 ], },
-    ],
+      { pos: [1, 0, 1], uv: [1, 0] },
+      { pos: [0, 0, 1], uv: [0, 0] },
+      { pos: [1, 0, 0], uv: [1, 1] },
+      { pos: [0, 0, 0], uv: [0, 1] }
+    ]
   },
-  { // top
+  {
+    // top
     uvRow: 2,
-    dir: [  0,  1,  0, ],
+    dir: [0, 1, 0],
     corners: [
-      { pos: [ 0, 1, 1 ], uv: [ 1, 1 ], },
-      { pos: [ 1, 1, 1 ], uv: [ 0, 1 ], },
-      { pos: [ 0, 1, 0 ], uv: [ 1, 0 ], },
-      { pos: [ 1, 1, 0 ], uv: [ 0, 0 ], },
-    ],
+      { pos: [0, 1, 1], uv: [1, 1] },
+      { pos: [1, 1, 1], uv: [0, 1] },
+      { pos: [0, 1, 0], uv: [1, 0] },
+      { pos: [1, 1, 0], uv: [0, 0] }
+    ]
   },
-  { // back
+  {
+    // back
     uvRow: 0,
-    dir: [  0,  0, -1, ],
+    dir: [0, 0, -1],
     corners: [
-      { pos: [ 1, 0, 0 ], uv: [ 0, 0 ], },
-      { pos: [ 0, 0, 0 ], uv: [ 1, 0 ], },
-      { pos: [ 1, 1, 0 ], uv: [ 0, 1 ], },
-      { pos: [ 0, 1, 0 ], uv: [ 1, 1 ], },
-    ],
+      { pos: [1, 0, 0], uv: [0, 0] },
+      { pos: [0, 0, 0], uv: [1, 0] },
+      { pos: [1, 1, 0], uv: [0, 1] },
+      { pos: [0, 1, 0], uv: [1, 1] }
+    ]
   },
-  { // front
+  {
+    // front
     uvRow: 0,
-    dir: [  0,  0,  1, ],
+    dir: [0, 0, 1],
     corners: [
-      { pos: [ 0, 0, 1 ], uv: [ 0, 0 ], },
-      { pos: [ 1, 0, 1 ], uv: [ 1, 0 ], },
-      { pos: [ 0, 1, 1 ], uv: [ 0, 1 ], },
-      { pos: [ 1, 1, 1 ], uv: [ 1, 1 ], },
-    ],
-  },
+      { pos: [0, 0, 1], uv: [0, 0] },
+      { pos: [1, 0, 1], uv: [1, 0] },
+      { pos: [0, 1, 1], uv: [0, 1] },
+      { pos: [1, 1, 1], uv: [1, 1] }
+    ]
+  }
 ];
 
 export default VoxelWorld;
