@@ -25,6 +25,8 @@ const renderer = new THREE.WebGLRenderer({
   antialias: true,
   canvas: renderContainer
 });
+renderer.gammaOutput = true;
+renderer.gammaFactor = 2.2;
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.setPixelRatio(window.devicePixelRatio);
 
@@ -47,7 +49,8 @@ scene.add(ambientLight);
 const cellSize = 32;
 const loader = new THREE.TextureLoader();
   const texture = loader.load('https://cdn.glitch.com/09b41b8e-5b1b-470e-8b60-eeaccaea49e9%2Ftexture_atlas_edited.png?v=1571104174274', render);
-  texture.magFilter = THREE.NearestFilter;
+texture.encoding = THREE.sRGBEncoding;  
+texture.magFilter = THREE.NearestFilter;
   texture.minFilter = THREE.NearestFilter;
 
   const tileSize = 16;
