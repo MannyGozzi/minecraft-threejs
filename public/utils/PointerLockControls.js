@@ -12,7 +12,6 @@ export default class PointerLockControls {
     this.controls = new THREE.PointerLockControls(camera);
     this.object = this.controls.getObject();
     this.object.position.y += 18;
-    this.object.position.x += 5;
     this.lastPos = new THREE.Vector3();
     
     this.objects = [];
@@ -174,16 +173,12 @@ document.addEventListener("keyup", onKeyUp, false);
       
       this.velocity.x -= this.velocity.x * 10.0 * delta;
       this.velocity.z -= this.velocity.z * 10.0 * delta;
-      this.velocity.y -= 9.8 * 10 * delta; // 100.0 = mass
+      this.velocity.y -= 9.8 * 0.01 * delta; // 100.0 = mass
       this.direction.z = Number( this.moveForward ) - Number( this.moveBackward );
       this.direction.x = Number( this.moveRight ) - Number( this.moveLeft );
       this.direction.normalize(); // this ensures consistent movements in all directions
       if ( this.moveForward || this.moveBackward ) this.velocity.z -= this.direction.z * speed * delta;
       if ( this.moveLeft || this.moveRight ) this.velocity.x -= this.direction.x * speed * delta;
-      if ( onObject === true ) {
-        this.velocity.y = Math.max( 0, this.velocity.y );
-        this.canJump = true;
-      }
       
       for(const prop in this.raycasters) {
         this.raycasters[prop].ray.origin.copy(this.controls.getObject().position );
@@ -191,8 +186,13 @@ document.addEventListener("keyup", onKeyUp, false);
         if(prop=="right" && this.raycasters[prop].intersectObjects( this.objects ).length>0) {this.velocity.x = 0;}
         if(prop=="back" && this.raycasters[prop].intersectObjects( this.objects ).length>0) {this.velocity.z = 0;}
         if(prop=="front" && this.raycasters[prop].intersectObjects( this.objects ).length>0) {this.velocity.z = 0;}
-        if(prop=="top" && this.raycasters[prop].intersectObjects( this.objects ).length>0) {this.velocity.y = 0;}
+        if(prop=="top" && this.raycasters[prop].intersectObjects( this.objects ).length>0) {Math.min( this.velocity.y, 0 );}
         if(prop=="bottom" && this.raycasters[prop].intersectObjects( this.objects ).length>0) {onObject = true;}
+      }
+      
+        if ( onObject === true ) {
+          this.velocity.y = Math.max( 0, this.velocity.y );
+          this.canJump = true;
       }
 
       this.controls.moveRight( - this.velocity.x * delta );
