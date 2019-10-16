@@ -180,10 +180,13 @@ document.addEventListener("keyup", onKeyUp, false);
       if ( this.moveForward || this.moveBackward ) this.velocity.z -= this.direction.z * speed * delta;
       if ( this.moveLeft || this.moveRight ) this.velocity.x -= this.direction.x * speed * delta;
       
-      const matrix = new THREE.Matrix4();
-      matrix.extractRotation(this.object);
+      const axis = new THREE.Vector3( 0, 1, 0 );
+      const angle = this.object.rotation.y;
+
+      vector.applyAxisAngle( axis, angle );
+      
       this.raycasters = {
-        left:       new THREE.Raycaster( new THREE.Vector3(), matrix.multiplyVector3(new THREE.Vector3( -1, 0, 0 ), 0, 0.5 ),
+        left:       new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( -1, 0, 0 ), 0, 0.5 ),
         right:     new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( 1, 0, 0 ), 0, 0.5 ),
         back:    new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( 0, 0, -1 ), 0, 0.5 ),
         front:     new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( 0, 0, 1 ), 0, 0.5 ),
