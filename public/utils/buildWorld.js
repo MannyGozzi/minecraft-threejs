@@ -1,6 +1,6 @@
 import VoxelWorld from '/utils/voxelWorld.js';
 
-export default function makeVoxelWorld() {
+export default function buildWorld() {
   const cellSize = 32;
   const loader = new THREE.TextureLoader();
   const texture = loader.load("https://cdn.glitch.com/09b41b8e-5b1b-470e-8b60-eeaccaea49e9%2Ftexture_atlas_edited.png?v=1571104174274");
@@ -57,6 +57,5 @@ export default function makeVoxelWorld() {
   geometry.addAttribute("uv", new THREE.BufferAttribute(new Float32Array(uvs), uvNumComponents));
   geometry.setIndex(indices);
   const mesh = new THREE.Mesh(geometry, material);
-
-  return world;
+  return {world: world, mesh: mesh};
 }

@@ -4,6 +4,7 @@ import PointLight from "/utils/pointLight.js";
 import AmbientLight from "/utils/ambientLight.js";
 import { ImprovedNoise } from "/utils/ImprovedNoise.js";
 import VoxelWorld from "/utils/voxelWorld.js";
+import buildWorld from '/utils/buildWorld.js';
 
 const renderContainer = document.querySelector("#renderer");
 const scene = new THREE.Scene();
@@ -46,9 +47,9 @@ const ambientLight = AmbientLight();
 scene.add(ambientLight);
 
 //VOXEL WORLD CREATION
-
-mesh.position.y -= cellSize;
-mesh.position.x -= cellSize / 2;
+const {mesh, world}  = buildWorld();
+mesh.position.y -= 16;
+mesh.position.x -= 8;
 scene.add(mesh);
 
 //resize canvas if window size is changed
