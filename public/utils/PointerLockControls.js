@@ -11,15 +11,15 @@ export default class PointerLockControls {
     this.velocity = new THREE.Vector3();
     this.controls = new THREE.PointerLockControls(camera);
     this.object = this.controls.getObject();
-    this.object.position.y += 18;
+    this.object.position.y += 22;
     this.lastPos = new THREE.Vector3();
     
     this.objects = [];
     this.raycasters = {
-      left:       new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( -1, 0, 0 ), 0, 1 ),
-      right:     new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( 1, 0, 0 ), 0, 1 ),
-      back:    new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( 0, 0, -1 ), 0, 1 ),
-      front:     new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( 0, 0, 1 ), 0, 1 ),
+      left:       new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( -1, 0, 0 ), 0, 0.5 ),
+      right:     new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( 1, 0, 0 ), 0, 0.5 ),
+      back:    new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( 0, 0, -1 ), 0, 0.5 ),
+      front:     new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( 0, 0, 1 ), 0, 0.5 ),
       top:        new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( 0, 1, 0 ), 0, 1 ),
       bottom: new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( 0, -1, 0 ), 0, 2 )
   };
@@ -173,7 +173,7 @@ document.addEventListener("keyup", onKeyUp, false);
       
       this.velocity.x -= this.velocity.x * 10.0 * delta;
       this.velocity.z -= this.velocity.z * 10.0 * delta;
-      this.velocity.y -= 9.8 * 0.01 * delta; // 100.0 = mass
+      this.velocity.y -= 9.8 * 3 * delta; // 100.0 = mass
       this.direction.z = Number( this.moveForward ) - Number( this.moveBackward );
       this.direction.x = Number( this.moveRight ) - Number( this.moveLeft );
       this.direction.normalize(); // this ensures consistent movements in all directions
@@ -182,10 +182,10 @@ document.addEventListener("keyup", onKeyUp, false);
       
       for(const prop in this.raycasters) {
         this.raycasters[prop].ray.origin.copy(this.controls.getObject().position );
-        if(prop=="left" && this.raycasters[prop].intersectObjects( this.objects ).length>0) {this.velocity.x = 0;}
-        if(prop=="right" && this.raycasters[prop].intersectObjects( this.objects ).length>0) {this.velocity.x = 0;}
-        if(prop=="back" && this.raycasters[prop].intersectObjects( this.objects ).length>0) {this.velocity.z = 0;}
-        if(prop=="front" && this.raycasters[prop].intersectObjects( this.objects ).length>0) {this.velocity.z = 0;}
+        if(prop=="left" && this.raycasters[prop].intersectObjects( this.objects ).length>0) {Math.max( this.velocity.x, 0 );}
+        if(prop=="right" && this.raycasters[prop].intersectObjects( this.objects ).length>0) {Math.min( this.velocity.x, 0 );}
+        if(prop=="back" && this.raycasters[prop].intersectObjects( this.objects ).length>0) {Math.max( this.velocity.y, 0 );}
+        if(prop=="front" && this.raycasters[prop].intersectObjects( this.objects ).length>0) {Math.min( this.velocity.y, 0 );}
         if(prop=="top" && this.raycasters[prop].intersectObjects( this.objects ).length>0) {Math.min( this.velocity.y, 0 );}
         if(prop=="bottom" && this.raycasters[prop].intersectObjects( this.objects ).length>0) {onObject = true;}
       }
@@ -200,9 +200,9 @@ document.addEventListener("keyup", onKeyUp, false);
       this.controls.getObject().position.y += ( this.velocity.y * delta ); // new behavior
 
      let info = document.querySelector('.info');
-        info.innerHTML = `x vel: ${this.object.rotation.x} <br>
-                                           y vel: ${this.object.rotation.y} <br>
-                                           z vel: ${this.object.rotation.z}`;
+        info.innerHTML = `x vel: ${this.velocity.x} <br>
+                                           y vel: ${this.velocity.y} <br>
+                                           z vel: ${this.velocity.z}`;
       this.prevTime = time;
     }
   }
