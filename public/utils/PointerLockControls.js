@@ -1,3 +1,5 @@
+//TODO work on collisions
+//get all surrounding voxels from the current position and make them into collision objects
 export default class PointerLockControls {
   constructor(camera) {
     this.controls;
@@ -11,8 +13,8 @@ export default class PointerLockControls {
     this.velocity = new THREE.Vector3();
     this.controls = new THREE.PointerLockControls(camera);
     this.object = this.controls.getObject();
-    this.object.position.y += 70;
-    this.object.position.x += 5;
+    this.object.position.y += 90;
+    this.object.position.x += 5.2;
     
     this.objects = [];
     this.direction = new THREE.Vector3();
@@ -165,7 +167,7 @@ document.addEventListener("keyup", onKeyUp, false);
       
       this.velocity.x -= this.velocity.x * 10.0 * delta;
       this.velocity.z -= this.velocity.z * 10.0 * delta;
-      this.velocity.y -= 9.8 * 1 * delta; // 100.0 = mass
+      this.velocity.y -= 9.8 * 3 * delta; // 100.0 = mass
       this.direction.z = Number( this.moveForward ) - Number( this.moveBackward );
       this.direction.x = Number( this.moveRight ) - Number( this.moveLeft );
       this.direction.normalize(); // this ensures consistent movements in all directions
@@ -181,7 +183,7 @@ document.addEventListener("keyup", onKeyUp, false);
         back:    new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( 0, 0, -1 ).applyAxisAngle(axis, angle), 0, 1),
         front:     new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( 0, 0, 1 ).applyAxisAngle(axis, angle), 0, 1 ),
         top:        new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( 0, 1, 0 ).applyAxisAngle(axis, angle), 0, 1 ),
-        bottom: new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( 0, -1, 0 ).applyAxisAngle(axis, angle), 0, 10 )
+        bottom: new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( 0, -1, 0 ).applyAxisAngle(axis, angle), 0, 2 )
       };
       
       for(const prop in this.raycasters) {
