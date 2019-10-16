@@ -182,16 +182,14 @@ document.addEventListener("keyup", onKeyUp, false);
       
       const axis = new THREE.Vector3( 0, 1, 0 );
       const angle = this.object.rotation.y;
-
-      vector.applyAxisAngle( axis, angle );
       
       this.raycasters = {
-        left:       new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( -1, 0, 0 ), 0, 0.5 ),
-        right:     new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( 1, 0, 0 ), 0, 0.5 ),
-        back:    new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( 0, 0, -1 ), 0, 0.5 ),
-        front:     new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( 0, 0, 1 ), 0, 0.5 ),
-        top:        new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( 0, 1, 0 ), 0, 1 ),
-        bottom: new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( 0, -1, 0 ), 0, 2 )
+        left:       new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( -1, 0, 0 ).applyAxisAngle(axis, angle), 0, 1),
+        right:     new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( 1, 0, 0 ).applyAxisAngle(axis, angle), 0, 1),
+        back:    new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( 0, 0, -1 ).applyAxisAngle(axis, angle), 0, 1),
+        front:     new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( 0, 0, 1 ).applyAxisAngle(axis, angle), 0, 1 ),
+        top:        new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( 0, 1, 0 ).applyAxisAngle(axis, angle), 0, 1 ),
+        bottom: new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( 0, -1, 0 ).applyAxisAngle(axis, angle), 0, 1 )
       };
       
       for(const prop in this.raycasters) {
@@ -214,9 +212,9 @@ document.addEventListener("keyup", onKeyUp, false);
       this.controls.getObject().position.y += ( this.velocity.y * delta ); // new behavior
 
      let info = document.querySelector('.info');
-        info.innerHTML = `x vel: ${this.velocity.x} <br>
-                                           y vel: ${this.velocity.y} <br>
-                                           z vel: ${this.velocity.z}`;
+        info.innerHTML =  new THREE.Vector3( -1, 0, 0 ).applyAxisAngle(axis, angle).x + " " +
+                                           new THREE.Vector3( -1, 0, 0 ).applyAxisAngle(axis, angle).y +"\n" + 
+                                           new THREE.Vector3( -1, 0, 0 ).applyAxisAngle(axis, angle).z;
       this.prevTime = time;
     }
   }
