@@ -14,10 +14,14 @@ export default class PointerLockControls {
     this.object.position.y += 1;
     
     this.objects = [];
-    this.raycaster;
+    this.leftRaycaster      = new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( -1, 0, 0 ), 0, 1 );
+    this.rightRaycaster    = new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( 1, 0, 0 ), 0, 1 );
+    this.backRaycaster   = new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( 0, 0, -1 ), 0, 1 );
+    this.frontRaycaster   = new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( 0, 0, 1 ), 0, 1 );
+    this.topRaycaster      = new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( 0, 1, 0 ), 0, 1 );
+    this.raycaster = new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( 0, - 1, 0 ), 0, 2 );
     this.direction = new THREE.Vector3();
     this.vertex = new THREE.Vector3();
-    this.raycaster = new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( 0, - 1, 0 ), 0, 2 );
 
     
     let blocker = document.getElementById("blocker");
@@ -165,8 +169,16 @@ document.addEventListener("keyup", onKeyUp, false);
       const intersections = this.raycaster.intersectObjects( this.objects );
       const onObject = intersections.length > 0;
       this.raycaster.ray.origin.copy( this.controls.getObject().position );
-      this.raycaster.ray.origin.y -= 0;
-
+      this.leftRaycaster.ray.origin.copy(this.controls.getObject().position);
+      this.rightRaycaster.ray.origin.copy(this.controls.getObject().position);
+      this.backRaycaster.ray.origin.copy(this.controls.getObject().position);
+      this.frontRaycaster.ray.origin.copy(this.controls.getObject().position);
+      this.topRaycaster.ray.origin.copy(this.controls.getObject().position);
+      const intersectionsLeft = this.leftRaycaster.intersectObjects( this.objects );
+      const intersectionsRight = this.rightRaycaster.intersectObjects( this.objects );
+      const intersectionsBack = this.backRaycaster.intersectObjects( this.objects );
+      const intersectionsFront = this.frontRaycaster.intersectObjects( this.objects );
+      const intersectionsTop = this.topRaycaster.intersectObjects( this.objects );
 
       this.velocity.x -= this.velocity.x * 10.0 * delta;
       this.velocity.z -= this.velocity.z * 10.0 * delta;
