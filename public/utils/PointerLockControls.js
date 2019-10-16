@@ -15,12 +15,14 @@ export default class PointerLockControls {
     this.lastPos = new THREE.Vector3();
     
     this.objects = [];
-    this.leftRaycaster      = new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( -1, 0, 0 ), 0, 1 );
-    this.rightRaycaster    = new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( 1, 0, 0 ), 0, 1 );
-    this.backRaycaster   = new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( 0, 0, -1 ), 0, 1 );
-    this.frontRaycaster   = new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( 0, 0, 1 ), 0, 1 );
-    this.topRaycaster      = new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( 0, 1, 0 ), 0, 1 );
-    this.raycaster = new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( 0, - 1, 0 ), 0, 2 );
+    this.raycasters = {
+      left:       new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( -1, 0, 0 ), 0, 1 ),
+      right:     new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( 1, 0, 0 ), 0, 1 ),
+      back:    new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( 0, 0, -1 ), 0, 1 ),
+      front:     new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( 0, 0, 1 ), 0, 1 ),
+      top:        new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( 0, 1, 0 ), 0, 1 ),
+      bottom: new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( 0, - 1, 0 ), 0, 2 )
+  };
     this.direction = new THREE.Vector3();
     this.vertex = new THREE.Vector3();
 
@@ -167,20 +169,13 @@ document.addEventListener("keyup", onKeyUp, false);
       const speed = 50.0;
       const time = performance.now();
       const delta = (time - this.prevTime) / 1000;
-      const intersections = this.raycaster.intersectObjects( this.objects );
+      const intersections = this.raycasters.bottom.intersectObjects( this.objects );
       const onObject = intersections.length > 0;
-      this.raycaster.ray.origin.copy( this.controls.getObject().position );
-      this.leftRaycaster.ray.origin.copy(this.controls.getObject().position);
-      this.rightRaycaster.ray.origin.copy(this.controls.getObject().position);
-      this.backRaycaster.ray.origin.copy(this.controls.getObject().position);
-      this.frontRaycaster.ray.origin.copy(this.controls.getObject().position);
-      this.topRaycaster.ray.origin.copy(this.controls.getObject().position);
-      const intersectionsLeft = this.leftRaycaster.intersectObjects( this.objects );
-      const intersectionsRight = this.rightRaycaster.intersectObjects( this.objects );
-      const intersectionsBack = this.backRaycaster.intersectObjects( this.objects );
-      const intersectionsFront = this.frontRaycaster.intersectObjects( this.objects );
-      const intersectionsTop = this.topRaycaster.intersectObjects( this.objects );
-
+      this.raycasters.bottom.ray.origin.copy( this.controls.getObject().position )
+      for(const raycaster in this.raycasters) {
+        console.log(raycaster);
+        raycaster.ray.origin.copy(this.controls.getObject().position );
+      }
       this.velocity.x -= this.velocity.x * 10.0 * delta;
       this.velocity.z -= this.velocity.z * 10.0 * delta;
       this.velocity.y -= 9.8 * 10 * delta; // 100.0 = mass
