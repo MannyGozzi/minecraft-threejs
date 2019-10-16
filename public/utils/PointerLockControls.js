@@ -12,6 +12,7 @@ export default class PointerLockControls {
     this.controls = new THREE.PointerLockControls(camera);
     this.object = this.controls.getObject();
     this.object.position.y += 1;
+    this.lastPos = new THREE.Vector3();
     
     this.objects = [];
     this.leftRaycaster      = new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( -1, 0, 0 ), 0, 1 );
@@ -197,10 +198,12 @@ document.addEventListener("keyup", onKeyUp, false);
       this.controls.getObject().position.y += ( this.velocity.y * delta ); // new behavior
 
      let info = document.querySelector('.info');
-        info.innerHTML = `x: ${this.object.position.x} <br>
-                                           y: ${this.object.position.y} <br>
-                                           z: ${this.object.position.z}`;
+        info.innerHTML = `x vel: ${this.object.rotation.x} <br>
+                                           y vel: ${this.object.rotation.y} <br>
+                                           z vel: ${this.object.rotation.z}`;
       this.prevTime = time;
     }
   }
 }
+
+// TODO if last pos changes left, right, back or whatever only then check raycasters
