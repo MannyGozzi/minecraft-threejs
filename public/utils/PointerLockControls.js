@@ -180,6 +180,17 @@ document.addEventListener("keyup", onKeyUp, false);
       if ( this.moveForward || this.moveBackward ) this.velocity.z -= this.direction.z * speed * delta;
       if ( this.moveLeft || this.moveRight ) this.velocity.x -= this.direction.x * speed * delta;
       
+      const matrix = new THREE.Matrix4();
+      matrix.extractRotation(this.object);
+      this.raycasters = {
+        left:       new THREE.Raycaster( new THREE.Vector3(), matrix.multiplyVector3(new THREE.Vector3( -1, 0, 0 ), 0, 0.5 ),
+        right:     new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( 1, 0, 0 ), 0, 0.5 ),
+        back:    new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( 0, 0, -1 ), 0, 0.5 ),
+        front:     new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( 0, 0, 1 ), 0, 0.5 ),
+        top:        new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( 0, 1, 0 ), 0, 1 ),
+        bottom: new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( 0, -1, 0 ), 0, 2 )
+      };
+      
       for(const prop in this.raycasters) {
         this.raycasters[prop].ray.origin.copy(this.controls.getObject().position );
         if(prop=="left" && this.raycasters[prop].intersectObjects( this.objects ).length>0) {Math.max( this.velocity.x, 0 );}
