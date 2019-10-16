@@ -11,7 +11,7 @@ export default class PointerLockControls {
     this.velocity = new THREE.Vector3();
     this.controls = new THREE.PointerLockControls(camera);
     this.object = this.controls.getObject();
-    this.object.position.y += 1;
+    this.object.position.y += 28;
     this.lastPos = new THREE.Vector3();
     
     this.objects = [];
@@ -169,12 +169,15 @@ document.addEventListener("keyup", onKeyUp, false);
       const speed = 50.0;
       const time = performance.now();
       const delta = (time - this.prevTime) / 1000;
-      const intersections = this.raycasters.bottom.intersectObjects( this.objects );
-      const onObject = intersections.length > 0;
-      this.raycasters.bottom.ray.origin.copy( this.controls.getObject().position )
-      for(const raycaster in this.raycasters) {
-        console.log(raycaster);
-        raycaster.ray.origin.copy(this.controls.getObject().position );
+      let onObject;
+      for(const prop in this.raycasters) {
+        this.raycasters[prop].ray.origin.copy(this.controls.getObject().position );
+        if(prop=="left" && this.raycasters[prop].intersectObjects( this.objects ).length>0) {this.velocity.x = 0;}
+        if(prop=="right" && this.raycasters[prop].intersectObjects( this.objects ).length>0) {this.velocity.x = 0;}
+        if(prop=="back" && this.raycasters[prop].intersectObjects( this.objects ).length>0) {this.velocity.z = 0;}
+        if(prop=="front" && this.raycasters[prop].intersectObjects( this.objects ).length>0) {this.velocity.z = 0;}
+        if(prop=="top" && this.raycasters[prop].intersectObjects( this.objects ).length>0) {this.velocity.y = 0;}
+        if(prop=="bottom" && this.raycasters[prop].intersectObjects( this.objects ).length>0) {onObject = true;}
       }
       this.velocity.x -= this.velocity.x * 10.0 * delta;
       this.velocity.z -= this.velocity.z * 10.0 * delta;
