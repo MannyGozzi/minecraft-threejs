@@ -11,7 +11,8 @@ export default class PointerLockControls {
     this.velocity = new THREE.Vector3();
     this.controls = new THREE.PointerLockControls(camera);
     this.object = this.controls.getObject();
-    this.object.position.y += 22;
+    this.object.position.y += 38;
+    
     this.lastPos = new THREE.Vector3();
     
     this.objects = [];
@@ -173,7 +174,7 @@ document.addEventListener("keyup", onKeyUp, false);
       
       this.velocity.x -= this.velocity.x * 10.0 * delta;
       this.velocity.z -= this.velocity.z * 10.0 * delta;
-      this.velocity.y -= 9.8 * 3 * delta; // 100.0 = mass
+      this.velocity.y -= 9.8 * 10 * delta; // 100.0 = mass
       this.direction.z = Number( this.moveForward ) - Number( this.moveBackward );
       this.direction.x = Number( this.moveRight ) - Number( this.moveLeft );
       this.direction.normalize(); // this ensures consistent movements in all directions
@@ -194,11 +195,11 @@ document.addEventListener("keyup", onKeyUp, false);
       
       for(const prop in this.raycasters) {
         this.raycasters[prop].ray.origin.copy(this.controls.getObject().position );
-        if(prop=="left" && this.raycasters[prop].intersectObjects( this.objects ).length>0) {Math.max( this.velocity.x, 0 );}
-        if(prop=="right" && this.raycasters[prop].intersectObjects( this.objects ).length>0) {Math.min( this.velocity.x, 0 );}
-        if(prop=="back" && this.raycasters[prop].intersectObjects( this.objects ).length>0) {Math.max( this.velocity.y, 0 );}
-        if(prop=="front" && this.raycasters[prop].intersectObjects( this.objects ).length>0) {Math.min( this.velocity.y, 0 );}
-        if(prop=="top" && this.raycasters[prop].intersectObjects( this.objects ).length>0) {Math.min( this.velocity.y, 0 );}
+        if(prop=="left" && this.raycasters[prop].intersectObjects( this.objects ).length>0) {this.velocity.x=Math.max( this.velocity.x, 0 );}
+        if(prop=="right" && this.raycasters[prop].intersectObjects( this.objects ).length>0) {this.velocity.x=Math.min( this.velocity.x, 0 );}
+        if(prop=="back" && this.raycasters[prop].intersectObjects( this.objects ).length>0) {this.velocity.z=Math.max( this.velocity.z, 0 );}
+        if(prop=="front" && this.raycasters[prop].intersectObjects( this.objects ).length>0) {this.velocity.z=Math.min( this.velocity.z, 0 );}
+        if(prop=="top" && this.raycasters[prop].intersectObjects( this.objects ).length>0) {this.velocity.y=Math.min( this.velocity.y, 0 );}
         if(prop=="bottom" && this.raycasters[prop].intersectObjects( this.objects ).length>0) {onObject = true;}
       }
       
@@ -212,9 +213,9 @@ document.addEventListener("keyup", onKeyUp, false);
       this.controls.getObject().position.y += ( this.velocity.y * delta ); // new behavior
 
      let info = document.querySelector('.info');
-        info.innerHTML =  new THREE.Vector3( -1, 0, 0 ).applyAxisAngle(axis, angle).x + " " +
-                                           new THREE.Vector3( -1, 0, 0 ).applyAxisAngle(axis, angle).y +"\n" + 
-                                           new THREE.Vector3( -1, 0, 0 ).applyAxisAngle(axis, angle).z;
+        info.innerHTML = `x vel: ${-this.velocity.x} <br>
+                                           y vel: ${this.velocity.y} <br>
+                                           z vel: ${-this.velocity.z}`;
       this.prevTime = time;
     }
   }
