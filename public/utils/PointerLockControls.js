@@ -12,10 +12,10 @@ export default class PointerLockControls {
     this.prevTime = performance.now();
     this.velocity = new THREE.Vector3();
     this.controls = new THREE.PointerLockControls(camera);
-    this.object.rotation.order('YXZ');
     this.object = this.controls.getObject();
+    this.object.rotation.order = 'YXZ';
     this.gravityIntensity = 5;
-    this.object.position.y += 90;
+    this.object.position.y += 200;
     this.object.position.x += 12;
     this.object.position.z += 5;
     this.arrow;
@@ -166,8 +166,6 @@ document.addEventListener("keyup", onKeyUp, false);
 
   update(scene) {
     if (this.controlsEnabled) {
-      this.arrow = new THREE.ArrowHelper( THREE.Vector3(1, 0, 0),  new THREE.Vector3(0,30,0), 2, Math.random() * 0xffffff );
-      scene.add( this.arrow );
       const yRot = this.object.rotation.y;
       this.worldVel.x = Math.cos(yRot) * this.velocity.x - Math.sin(yRot) * this.velocity.z;
       this.worldVel.y = this.velocity.y;
@@ -177,15 +175,13 @@ document.addEventListener("keyup", onKeyUp, false);
       const friction = 0.5;
       const delta = (time - this.prevTime) / 1000;
       let onObject;
-  
       
-      //add friction to velocity vectors
+      //add friction to velocity vectors and gravity to y vector
       this.velocity.x *= friction;
       this.velocity.z *= friction;
-      
-      //add gravity
       this.velocity.y -= 9.8 * this.gravityIntensity * delta; // 100.0 = mass
       
+      //change relative velocity of object
       if (this.moveRight) this.velocity.x += speed;
       if (this.moveLeft) this.velocity.x -= speed;
       if (this.moveForward) this.velocity.z += speed;
@@ -194,20 +190,20 @@ document.addEventListener("keyup", onKeyUp, false);
       const axis = new THREE.Vector3( 0, 1, 0 );
       const angle = this.object.rotation.y;
       
+      
       this.raycasters = {
-        left:       new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( -1, 0, 0 ).applyAxisAngle(axis, angle), 0, 1),
-        right:     new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( 1, 0, 0 ).applyAxisAngle(axis, angle), 0, 1),
-        back:    new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( 0, 0, -1 ).applyAxisAngle(axis, angle), 0, 1),
-        front:     new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( 0, 0, 1 ).applyAxisAngle(axis, angle), 0, 1 ),
-        top:        new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( 0, 1, 0 ), 0, 1 ),
-        bottom: new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( 0, -1, 0 ), 0, Math.abs(this.velocity.y ) ) //set a high length bc vertical accel can be high so it needs to check farther down
+        left:       new THREE.Raycaster( this.object.position, new THREE.Vector3( -1, 0, 0 ), 0, 1),
+        right:     new THREE.Raycaster( this.object.position, new THREE.Vector3( 1, 0, 0 ), 0, 1),
+        back:    new THREE.Raycaster( this.object.position, new THREE.Vector3( 0, 0, -1 ), 0, 1),
+        front:     new THREE.Raycaster( this.object.position, new THREE.Vector3( 0, 0, 1 ), 0, 1 ),
+        top:        new THREE.Raycaster( this.object.position, new THREE.Vector3( 0, 1, 0 ), 0, 1 ),
+        bottom: new THREE.Raycaster( this.object.position, new THREE.Vector3( 0, -1, 0 ), 0, Math.abs(this.velocity.y ) ) //set a high length bc vertical accel can be high so it needs to check farther down
       };
       
       for(const prop in this.raycasters) {
-        this.raycasters[prop].ray.origin.copy(this.controls.getObject().position );
         if(prop =="bottom") {this.raycasters['bottom'].ray.origin.y += Math.abs(this.velocity.y ) - 2;}
-        if(prop=="left" && this.raycasters[prop].intersectObjects( this.objects ).length>0) {this.velocity.x=Math.max( this.velocity.x, 0 );}
-        if(prop=="right" && this.raycasters[prop].intersectObjects( this.objects ).length>0) {this.velocity.x=Math.min( this.velocity.x, 0 );}
+        if(prop=="left" && this.raycasters[prop].intersectObjects( this.objects ).length>0) {this.worldVel=Math.max( this.worldVel.x, 0 );}
+        if(prop=="right" && this.raycasters[prop].intersectObjects( this.objects ).length>0) {this.worldVel=Math.min( this.worldVel.x, 0 );}
         if(prop=="back" && this.raycasters[prop].intersectObjects( this.objects ).length>0) {this.velocity.z=Math.max( this.velocity.z, 0 );}
         if(prop=="front" && this.raycasters[prop].intersectObjects( this.objects ).length>0) {this.velocity.z=Math.min( this.velocity.z, 0 );}
         if(prop=="top" && this.raycasters[prop].intersectObjects( this.objects ).length>0) {this.velocity.y=Math.min( this.velocity.y, 0 );}
@@ -218,10 +214,9 @@ document.addEventListener("keyup", onKeyUp, false);
           this.velocity.y = Math.max( 0, this.velocity.y );
           this.canJump = true;
       }
-
-      this.controls.moveRight( this.velocity.x * delta );
-      this.controls.moveForward( this.velocity.z * delta );
-      this.controls.getObject().position.y += ( this.velocity.y * delta ); // new behavior
+      
+      //move object relative to world
+      this.object.position.add(this.worldVel.clone().multiplyScalar(delta));
 
      let info = document.querySelector('.info');
         info.innerHTML = `world x vel: ${this.worldVel.x} <br>
