@@ -14,12 +14,10 @@ export default class PointerLockControls {
     this.controls = new THREE.PointerLockControls(camera);
     this.object = this.controls.getObject();
     this.object.rotation.order = 'YXZ';
-    this.gravityIntensity = 5;
-    this.object.position.y += 200;
+    this.gravityIntensity = 2;
+    this.object.position.y += 500;
     this.object.position.x += 12;
     this.object.position.z += 5;
-    this.arrow;
-    this.worldVec = this.object.position.clone();
     this.worldVel = new THREE.Vector3();
     
     this.objects = [];
@@ -166,10 +164,6 @@ document.addEventListener("keyup", onKeyUp, false);
 
   update(scene) {
     if (this.controlsEnabled) {
-      const yRot = this.object.rotation.y;
-      this.worldVel.x = Math.cos(yRot) * this.velocity.x - Math.sin(yRot) * this.velocity.z;
-      this.worldVel.y = this.velocity.y;
-      this.worldVel.z = Math.cos(yRot) * this.velocity.z + Math.sin(yRot) * this.velocity.x ;
       const speed = 3.0;
       const time = performance.now();
       const friction = 0.5;
@@ -187,8 +181,10 @@ document.addEventListener("keyup", onKeyUp, false);
       if (this.moveForward) this.velocity.z += speed;
       if (this.moveBackward) this.velocity.z -= speed;
       
-      const axis = new THREE.Vector3( 0, 1, 0 );
-      const angle = this.object.rotation.y;
+      const yRot = this.object.rotation.y;
+      this.worldVel.x = Math.cos(yRot) * this.velocity.x - Math.sin(yRot) * this.velocity.z;
+      this.worldVel.y = this.velocity.y;
+      this.worldVel.z = Math.cos(yRot) * this.velocity.z + Math.sin(yRot) * this.velocity.x ;
       
       
       this.raycasters = {
@@ -202,27 +198,30 @@ document.addEventListener("keyup", onKeyUp, false);
       
       for(const prop in this.raycasters) {
         if(prop =="bottom") {this.raycasters['bottom'].ray.origin.y += Math.abs(this.velocity.y ) - 2;}
-        if(prop=="left" && this.raycasters[prop].intersectObjects( this.objects ).length>0) {this.worldVel=Math.max( this.worldVel.x, 0 );}
-        if(prop=="right" && this.raycasters[prop].intersectObjects( this.objects ).length>0) {this.worldVel=Math.min( this.worldVel.x, 0 );}
-        if(prop=="back" && this.raycasters[prop].intersectObjects( this.objects ).length>0) {this.velocity.z=Math.max( this.velocity.z, 0 );}
-        if(prop=="front" && this.raycasters[prop].intersectObjects( this.objects ).length>0) {this.velocity.z=Math.min( this.velocity.z, 0 );}
-        if(prop=="top" && this.raycasters[prop].intersectObjects( this.objects ).length>0) {this.velocity.y=Math.min( this.velocity.y, 0 );}
+        if(prop=="left" && this.raycasters[prop].intersectObjects( this.objects ).length>0) {this.worldVel.x=Math.max( this.worldVel.x, 0 );}
+        if(prop=="right" && this.raycasters[prop].intersectObjects( this.objects ).length>0) {this.worldVel.x=Math.min( this.worldVel.x, 0 );}
+        if(prop=="back" && this.raycasters[prop].intersectObjects( this.objects ).length>0) {this.worldVel.z=Math.max( this.worldVel.z, 0 );}
+        if(prop=="front" && this.raycasters[prop].intersectObjects( this.objects ).length>0) {this.worldVel.z=Math.min( this.worldVel.z, 0 );}
+        if(prop=="top" && this.raycasters[prop].intersectObjects( this.objects ).length>0) {this.worldVel.y=Math.min( this.worldVel.y, 0 );}
         if(prop=="bottom" && this.raycasters[prop].intersectObjects( this.objects ).length>0){onObject = true;}
       }
       
         if ( onObject === true ) {
           this.velocity.y = Math.max( 0, this.velocity.y );
+          this.worldVel.y = this.velocity.y;
           this.canJump = true;
       }
       
       //move object relative to world
-      this.object.position.add(this.worldVel.clone().multiplyScalar(delta));
+      this.object.position.x += this.worldVel.x * delta;
+      this.object.position.y += this.worldVel.y * delta;
+      this.object.position.z += this.worldVel.z * delta;
 
      let info = document.querySelector('.info');
         info.innerHTML = `world x vel: ${this.worldVel.x} <br>
                                            world y vel: ${this.worldVel.y} <br>
                                            world z vel: ${this.worldVel.z}<br>
-                                           yRot:          : ${this.object.rotation.y}`;
+                                           yRot           : ${this.object.rotation.y}`;
       this.prevTime = time;
     }
   }
