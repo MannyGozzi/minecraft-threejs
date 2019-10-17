@@ -167,9 +167,10 @@ document.addEventListener("keyup", onKeyUp, false);
     if (this.controlsEnabled) {
       this.arrow = new THREE.ArrowHelper( THREE.Vector3(1, 0, 0),  new THREE.Vector3(0,30,0), 2, Math.random() * 0xffffff );
       scene.add( this.arrow );
-      this.worldVec.position.copy(this.object.position);
       const yRot = this.object.rotation.y;
-      this.worldVel.x = Math.cos(yRot) * this.velocity.x;
+      this.worldVel.x = Math.cos(yRot) * this.velocity.x - Math.sin(yRot) * this.velocity.z;
+      this.worldVel.y = this.velocity.y;
+      this.worldVel.z = Math.cos(yRot) * this.velocity.z + Math.sin(yRot) * this.velocity.x ;
       const speed = 3.0;
       const time = performance.now();
       const friction = 0.5;
@@ -222,9 +223,10 @@ document.addEventListener("keyup", onKeyUp, false);
       this.controls.getObject().position.y += ( this.velocity.y * delta ); // new behavior
 
      let info = document.querySelector('.info');
-        info.innerHTML = `x vel: ${-this.velocity.x} <br>
-                                           y vel: ${this.velocity.y} <br>
-                                           z vel: ${-this.velocity.z}`;
+        info.innerHTML = `world x vel: ${this.worldVel.x} <br>
+                                           world y vel: ${this.worldVel.y} <br>
+                                           world z vel: ${this.worldVel.z}<br>
+                                           yRot:          : ${this.object.rotation.y}`;
       this.prevTime = time;
     }
   }
