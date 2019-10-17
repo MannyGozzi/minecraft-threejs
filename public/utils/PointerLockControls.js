@@ -13,11 +13,14 @@ export default class PointerLockControls {
     this.velocity = new THREE.Vector3();
     this.controls = new THREE.PointerLockControls(camera);
     this.object = this.controls.getObject();
-    this.gravityIntensity = 2;
+    this.gravityIntensity = 5;
     this.object.position.y += 90;
     this.object.position.x += 12;
     this.object.position.z += 5;
     this.arrow;
+    this.prevPos = this.object.position.clone();
+    this.prevWorldVel = new THREE.Vector3();
+    this.worldVel = new THREE.Vector3();
     
     this.objects = [];
     this.direction = new THREE.Vector3();
@@ -193,12 +196,12 @@ document.addEventListener("keyup", onKeyUp, false);
         back:    new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( 0, 0, -1 ).applyAxisAngle(axis, angle), 0, 1),
         front:     new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( 0, 0, 1 ).applyAxisAngle(axis, angle), 0, 1 ),
         top:        new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( 0, 1, 0 ), 0, 1 ),
-        bottom: new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( 0, -1, 0 ), 0, Math.abs(this.velocity.y ) //set a high length bc vertical accel can be high so it needs to check farther down
+        bottom: new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( 0, -1, 0 ), 0, Math.abs(this.velocity.y ) ) //set a high length bc vertical accel can be high so it needs to check farther down
       };
       
       for(const prop in this.raycasters) {
         this.raycasters[prop].ray.origin.copy(this.controls.getObject().position );
-        if(prop =="bottom") {this.raycasters['bottom'].ray.origin.y += Math.;}
+        if(prop =="bottom") {this.raycasters['bottom'].ray.origin.y += Math.abs(this.velocity.y ) - 2;}
         if(prop=="left" && this.raycasters[prop].intersectObjects( this.objects ).length>0) {this.velocity.x=Math.max( this.velocity.x, 0 );}
         if(prop=="right" && this.raycasters[prop].intersectObjects( this.objects ).length>0) {this.velocity.x=Math.min( this.velocity.x, 0 );}
         if(prop=="back" && this.raycasters[prop].intersectObjects( this.objects ).length>0) {this.velocity.z=Math.max( this.velocity.z, 0 );}
@@ -220,7 +223,10 @@ document.addEventListener("keyup", onKeyUp, false);
         info.innerHTML = `x vel: ${-this.velocity.x} <br>
                                            y vel: ${this.velocity.y} <br>
                                            z vel: ${-this.velocity.z}`;
+      this.worldVel = this.object.position.clone().sub(this.prevPos);
+      this.prevPos = this.object.position.clone();
       this.prevTime = time;
+      alert
     }
   }
 }
