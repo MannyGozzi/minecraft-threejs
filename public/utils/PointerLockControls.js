@@ -160,19 +160,27 @@ document.addEventListener("keyup", onKeyUp, false);
 
   update() {
     if (this.controlsEnabled) {
-      const speed = 50.0;
+      const speed = 2.0;
       const time = performance.now();
+      const friction = 0.01;
       const delta = (time - this.prevTime) / 1000;
       let onObject;
       
-      this.velocity.x -= this.velocity.x * 10.0 * delta;
-      this.velocity.z -= this.velocity.z * 10.0 * delta;
+      //add friction to velocity vectors
+      this.velocity.x *= Math.pow(friction, delta);
+      this.velocity.z *= Math.pow(friction, delta);
+      
+      //add gravity
       this.velocity.y -= 9.8 * 3 * delta; // 100.0 = mass
-      this.direction.z = Number( this.moveForward ) - Number( this.moveBackward );
-      this.direction.x = Number( this.moveRight ) - Number( this.moveLeft );
-      this.direction.normalize(); // this ensures consistent movements in all directions
-      if ( this.moveForward || this.moveBackward ) this.velocity.z -= this.direction.z * speed * delta;
-      if ( this.moveLeft || this.moveRight ) this.velocity.x -= this.direction.x * speed * delta;
+      
+      if (this.moveRight) this.velocity.x += speed;
+      if (this.moveLeft) this.velocity.x -= speed;
+      if (this.moveForward) this.velocity.z += speed;
+      if (this.moveBackward) this.velocity.z -= speed;
+      const yVel = this.velocity.y;
+      this.velocity.normalize();
+      this.velocity.multiplyScalar(speed);
+      this.velocity.y = yVel;
       
       const axis = new THREE.Vector3( 0, 1, 0 );
       const angle = this.object.rotation.y;
@@ -201,8 +209,8 @@ document.addEventListener("keyup", onKeyUp, false);
           this.canJump = true;
       }
 
-      this.controls.moveRight( - this.velocity.x * delta );
-      this.controls.moveForward( - this.velocity.z * delta );
+      this.controls.moveRight( this.velocity.x * delta );
+      this.controls.moveForward( this.velocity.z * delta );
       this.controls.getObject().position.y += ( this.velocity.y * delta ); // new behavior
 
      let info = document.querySelector('.info');
