@@ -18,8 +18,7 @@ export default class PointerLockControls {
     this.object.position.x += 12;
     this.object.position.z += 5;
     this.arrow;
-    this.prevPos = this.object.position.clone();
-    this.prevWorldVel = new THREE.Vector3();
+    this.worldVec = this.object.position.clone();
     this.worldVel = new THREE.Vector3();
     
     this.objects = [];
@@ -168,6 +167,9 @@ document.addEventListener("keyup", onKeyUp, false);
     if (this.controlsEnabled) {
       this.arrow = new THREE.ArrowHelper( THREE.Vector3(1, 0, 0),  new THREE.Vector3(0,30,0), 2, Math.random() * 0xffffff );
       scene.add( this.arrow );
+      this.worldVec.position.copy(this.object.position);
+      const yRot = this.object.rotation.y;
+      this.worldVel.x = Math.cos(yRot) * this.velocity.x;
       const speed = 3.0;
       const time = performance.now();
       const friction = 0.5;
@@ -223,10 +225,7 @@ document.addEventListener("keyup", onKeyUp, false);
         info.innerHTML = `x vel: ${-this.velocity.x} <br>
                                            y vel: ${this.velocity.y} <br>
                                            z vel: ${-this.velocity.z}`;
-      this.worldVel = this.object.position.clone().sub(this.prevPos);
-      this.prevPos = this.object.position.clone();
       this.prevTime = time;
-      alert
     }
   }
 }
