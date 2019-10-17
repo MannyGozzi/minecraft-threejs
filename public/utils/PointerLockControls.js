@@ -196,7 +196,7 @@ document.addEventListener("keyup", onKeyUp, false);
         top:        new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( 0, 1, 0 ), 0, 1 ),
         bottom: new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( 0, -1, 0 ), 0, 20 ) //set a high length bc vertical accel can be high so it needs to check farther down
       };
-      
+      const bottomIntersections = this.raycasters['bottom'].intersectObjects( this.objects );
       for(const prop in this.raycasters) {
         this.raycasters[prop].ray.origin.copy(this.controls.getObject().position );
         if(prop=="left" && this.raycasters[prop].intersectObjects( this.objects ).length>0) {this.velocity.x=Math.max( this.velocity.x, 0 );}
