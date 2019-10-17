@@ -15,6 +15,7 @@ export default class PointerLockControls {
     this.object = this.controls.getObject();
     this.object.position.y += 90;
     this.object.position.x += 5.2;
+    this.arrow;
     
     this.objects = [];
     this.direction = new THREE.Vector3();
@@ -157,18 +158,24 @@ document.addEventListener("keyup", onKeyUp, false);
   pushIntersectObject(object) {
     this.objects.push(object);
   }
+  
+  addArrows(scene) {
+      this.arrow = new THREE.ArrowHelper( THREE.Vector3(0, 0, 1), this.object.position, 100, Math.random() * 0xffffff );
+      scene.add( arrow );
+  }
 
   update() {
     if (this.controlsEnabled) {
-      const speed = 2.0;
+      const speed = 3.0;
       const time = performance.now();
-      const friction = 0.01;
+      const friction = 0.2;
       const delta = (time - this.prevTime) / 1000;
       let onObject;
+  
       
       //add friction to velocity vectors
-      this.velocity.x *= Math.pow(friction, delta);
-      this.velocity.z *= Math.pow(friction, delta);
+      this.velocity.x *= friction;
+      this.velocity.z *= friction;
       
       //add gravity
       this.velocity.y -= 9.8 * 3 * delta; // 100.0 = mass
