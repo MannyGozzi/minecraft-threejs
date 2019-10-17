@@ -197,14 +197,18 @@ document.addEventListener("keyup", onKeyUp, false);
         bottom: new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( 0, -1, 0 ), 0, 20 ) //set a high length bc vertical accel can be high so it needs to check farther down
       };
       const bottomIntersections = this.raycasters['bottom'].intersectObjects( this.objects );
+      
       for(const prop in this.raycasters) {
         this.raycasters[prop].ray.origin.copy(this.controls.getObject().position );
+        if(prop =="bottom") {this.raycasters['bottom'].ray.origin.y += 20;}
         if(prop=="left" && this.raycasters[prop].intersectObjects( this.objects ).length>0) {this.velocity.x=Math.max( this.velocity.x, 0 );}
         if(prop=="right" && this.raycasters[prop].intersectObjects( this.objects ).length>0) {this.velocity.x=Math.min( this.velocity.x, 0 );}
         if(prop=="back" && this.raycasters[prop].intersectObjects( this.objects ).length>0) {this.velocity.z=Math.max( this.velocity.z, 0 );}
         if(prop=="front" && this.raycasters[prop].intersectObjects( this.objects ).length>0) {this.velocity.z=Math.min( this.velocity.z, 0 );}
         if(prop=="top" && this.raycasters[prop].intersectObjects( this.objects ).length>0) {this.velocity.y=Math.min( this.velocity.y, 0 );}
-        if(prop=="bottom" && this.raycasters[prop].intersectObjects( this.objects ).length>0) {onObject = true;}
+        if(prop=="bottom" && bottomIntersections.length>0) 
+        {onObject = true; );
+        }
       }
       
         if ( onObject === true ) {
