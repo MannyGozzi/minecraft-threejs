@@ -12,6 +12,7 @@ export default class PointerLockControls {
     this.prevTime = performance.now();
     this.velocity = new THREE.Vector3();
     this.controls = new THREE.PointerLockControls(camera);
+    this.object.rotation.order('YXZ');
     this.object = this.controls.getObject();
     this.gravityIntensity = 5;
     this.object.position.y += 90;
