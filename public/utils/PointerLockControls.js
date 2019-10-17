@@ -214,7 +214,7 @@ document.addEventListener("keyup", onKeyUp, false);
       
       //move object relative to world
       //TODO convert worldVel to object relative vel
-      this.object.getWorldPosition().add(this.worldVel.clone().multiplyScalar(delta));
+      this.object.position.add(this.worldVel.clone().multiplyScalar(delta));
 
      let info = document.querySelector('.info');
         info.innerHTML = `world x vel: ${this.worldVel.x} <br>
