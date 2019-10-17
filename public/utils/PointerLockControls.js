@@ -213,8 +213,8 @@ document.addEventListener("keyup", onKeyUp, false);
       }
       
       //move object relative to world
-      const rotation = this.object.rotation;
-      this.object.position.add(this.worldVel.clone().multiplyScalar(delta));
+      //TODO convert worldVel to object relative vel
+      this.object.getWorldPosition().add(this.worldVel.clone().multiplyScalar(delta));
 
      let info = document.querySelector('.info');
         info.innerHTML = `world x vel: ${this.worldVel.x} <br>
@@ -225,5 +225,3 @@ document.addEventListener("keyup", onKeyUp, false);
     }
   }
 }
-
-// TODO if last pos changes left, right, back or whatever only then check raycasters
