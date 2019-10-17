@@ -160,12 +160,16 @@ document.addEventListener("keyup", onKeyUp, false);
   }
   
   addArrows(scene) {
-      this.arrow = new THREE.ArrowHelper( THREE.Vector3(0, 0, 1), this.object.position, 100, Math.random() * 0xffffff );
-      scene.add( arrow );
+      this.arrow = new THREE.ArrowHelper( THREE.Vector3(1, 0, 0), this.object.position, 100, Math.random() * 0xffffff );
+      scene.add( this.arrow );
   }
 
-  update() {
+  update(scene) {
     if (this.controlsEnabled) {
+      scene.remove(this.arrow);
+      this.arrow = new THREE.ArrowHelper( THREE.Vector3(1, 0, 0), this.object.position.clone().sub(new THREE.Vector3(0,0.1,0)), 100, Math.random() * 0xffffff );
+      scene.add( this.arrow );
+      this.arrow.origin = this.object.position;
       const speed = 3.0;
       const time = performance.now();
       const friction = 0.2;
@@ -185,6 +189,7 @@ document.addEventListener("keyup", onKeyUp, false);
       if (this.moveForward) this.velocity.z += speed;
       if (this.moveBackward) this.velocity.z -= speed;
       const yVel = this.velocity.y;
+      this.velocity.y = 0;
       this.velocity.normalize();
       this.velocity.multiplyScalar(speed);
       this.velocity.y = yVel;
