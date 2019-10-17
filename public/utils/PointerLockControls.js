@@ -158,21 +158,15 @@ document.addEventListener("keyup", onKeyUp, false);
   pushIntersectObject(object) {
     this.objects.push(object);
   }
-  
-  addArrows(scene) {
-      this.arrow = new THREE.ArrowHelper( THREE.Vector3(1, 0, 0), this.object.position, 100, Math.random() * 0xffffff );
-      scene.add( this.arrow );
-  }
 
   update(scene) {
     if (this.controlsEnabled) {
       scene.remove(this.arrow);
-      this.arrow = new THREE.ArrowHelper( THREE.Vector3(1, 0, 0), this.object.position.clone().sub(new THREE.Vector3(0,0.1,0)), 100, Math.random() * 0xffffff );
+      this.arrow = new THREE.ArrowHelper( THREE.Vector3(0, 0, 1),  this, 100, Math.random() * 0xffffff );
       scene.add( this.arrow );
-      this.arrow.origin = this.object.position;
       const speed = 3.0;
       const time = performance.now();
-      const friction = 0.2;
+      const friction = 0.5;
       const delta = (time - this.prevTime) / 1000;
       let onObject;
   
@@ -188,11 +182,6 @@ document.addEventListener("keyup", onKeyUp, false);
       if (this.moveLeft) this.velocity.x -= speed;
       if (this.moveForward) this.velocity.z += speed;
       if (this.moveBackward) this.velocity.z -= speed;
-      const yVel = this.velocity.y;
-      this.velocity.y = 0;
-      this.velocity.normalize();
-      this.velocity.multiplyScalar(speed);
-      this.velocity.y = yVel;
       
       const axis = new THREE.Vector3( 0, 1, 0 );
       const angle = this.object.rotation.y;
