@@ -57,5 +57,7 @@ export default function buildWorld() {
   geometry.addAttribute("uv", new THREE.BufferAttribute(new Float32Array(uvs), uvNumComponents));
   geometry.setIndex(indices);
   const mesh = new THREE.Mesh(geometry, material);
+  mesh.geometry.computeBoundingBox();
+  mesh.geometry.computeBoundingSphere();
   return {world: world, mesh: mesh};
 }

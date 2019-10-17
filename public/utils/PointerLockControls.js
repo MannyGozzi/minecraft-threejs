@@ -13,8 +13,10 @@ export default class PointerLockControls {
     this.velocity = new THREE.Vector3();
     this.controls = new THREE.PointerLockControls(camera);
     this.object = this.controls.getObject();
-    this.object.position.y += 90;
-    this.object.position.x += 5.2;
+    this.gravityIntensity = 2;
+    this.object.position.y += 32;
+    this.object.position.x += 12;
+    this.object.position.z += 5;
     this.arrow;
     
     this.objects = [];
@@ -162,7 +164,7 @@ document.addEventListener("keyup", onKeyUp, false);
   update(scene) {
     if (this.controlsEnabled) {
       scene.remove(this.arrow);
-      this.arrow = new THREE.ArrowHelper( THREE.Vector3(0, 0, 1),  this, 100, Math.random() * 0xffffff );
+      this.arrow = new THREE.ArrowHelper( THREE.Vector3(0, 0, 1),  new THREE.Vector3(0,30,0), 2, Math.random() * 0xffffff );
       scene.add( this.arrow );
       const speed = 3.0;
       const time = performance.now();
@@ -176,7 +178,7 @@ document.addEventListener("keyup", onKeyUp, false);
       this.velocity.z *= friction;
       
       //add gravity
-      this.velocity.y -= 9.8 * 3 * delta; // 100.0 = mass
+      this.velocity.y -= 9.8 * this.gravityIntensity * delta; // 100.0 = mass
       
       if (this.moveRight) this.velocity.x += speed;
       if (this.moveLeft) this.velocity.x -= speed;
@@ -191,8 +193,8 @@ document.addEventListener("keyup", onKeyUp, false);
         right:     new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( 1, 0, 0 ).applyAxisAngle(axis, angle), 0, 1),
         back:    new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( 0, 0, -1 ).applyAxisAngle(axis, angle), 0, 1),
         front:     new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( 0, 0, 1 ).applyAxisAngle(axis, angle), 0, 1 ),
-        top:        new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( 0, 1, 0 ).applyAxisAngle(axis, angle), 0, 1 ),
-        bottom: new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( 0, -1, 0 ).applyAxisAngle(axis, angle), 0, 2 )
+        top:        new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( 0, 1, 0 ), 0, 1 ),
+        bottom: new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( 0, -1, 0 ), 0, 2 )
       };
       
       for(const prop in this.raycasters) {

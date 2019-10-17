@@ -6,6 +6,5 @@ export default function configCamera() {
   const far = 1000; // the far clipping plane
   const camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
   // we'll move the camera back a bit so that we can view the scene
-  camera.position.set(0, 0, 5);
   return camera;
 }
