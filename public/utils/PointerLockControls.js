@@ -194,7 +194,7 @@ document.addEventListener("keyup", onKeyUp, false);
         back:    new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( 0, 0, -1 ).applyAxisAngle(axis, angle), 0, 1),
         front:     new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( 0, 0, 1 ).applyAxisAngle(axis, angle), 0, 1 ),
         top:        new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( 0, 1, 0 ), 0, 1 ),
-        bottom: new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( 0, -1, 0 ), 0, 2 )
+        bottom: new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( 0, -1, 0 ), 0, 20 ) //set a high length bc vertical accel can be high so it needs to check farther down
       };
       
       for(const prop in this.raycasters) {
