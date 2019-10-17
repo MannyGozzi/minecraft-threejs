@@ -17,7 +17,8 @@ const pointLight = PointLight(); scene.add(pointLight);
 const ambientLight = AmbientLight(); scene.add(ambientLight);
 
 //VOXEL WORLD CREATION
-const {mesh, world}  = buildWorld(); scene.add(mesh);
+const {mesh, world}  = buildWorld(); 
+scene.add(mesh);
 
 attachResizeListener(renderer, camera);
 

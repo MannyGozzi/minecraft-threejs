@@ -14,8 +14,8 @@ export default class PointerLockControls {
     this.controls = new THREE.PointerLockControls(camera);
     this.object = this.controls.getObject();
     this.object.rotation.order = 'YXZ';
-    this.gravityIntensity = 0.0001;
-    this.object.position.y = 200;
+    this.gravityIntensity = 0.1;
+    this.object.position.y = 50;
     this.object.position.x += 12;
     this.object.position.z += 5;
     this.worldVel = new THREE.Vector3();
@@ -188,12 +188,12 @@ document.addEventListener("keyup", onKeyUp, false);
       
       
       this.raycasters = {
-        left:       new THREE.Raycaster( this.object.position, new THREE.Vector3( -1, 0, 0 ), 0, 1),
-        right:     new THREE.Raycaster( this.object.position, new THREE.Vector3( 1, 0, 0 ), 0, 1),
-        back:    new THREE.Raycaster( this.object.position, new THREE.Vector3( 0, 0, -1 ), 0, 1),
-        front:     new THREE.Raycaster( this.object.position, new THREE.Vector3( 0, 0, 1 ), 0, 1 ),
-        top:        new THREE.Raycaster( this.object.position, new THREE.Vector3( 0, 1, 0 ), 0, 1 ),
-        bottom: new THREE.Raycaster( this.object.position, new THREE.Vector3( 0, -1, 0 ), 0, Math.abs(this.velocity.y ) ) //set a high length bc vertical accel can be high so it needs to check farther down
+        left:       new THREE.Raycaster( this.object.position.clone(), new THREE.Vector3( -1, 0, 0 ), 0, 1),
+        right:     new THREE.Raycaster( this.object.position.clone(), new THREE.Vector3( 1, 0, 0 ), 0, 1),
+        back:    new THREE.Raycaster( this.object.position.clone(), new THREE.Vector3( 0, 0, -1 ), 0, 1),
+        front:     new THREE.Raycaster( this.object.position.clone(), new THREE.Vector3( 0, 0, 1 ), 0, 1 ),
+        top:        new THREE.Raycaster( this.object.position.clone(), new THREE.Vector3( 0, 1, 0 ), 0, 1 ),
+        bottom: new THREE.Raycaster( this.object.position.clone(), new THREE.Vector3( 0, -1, 0 ), 0, Math.abs(this.velocity.y ) ) //set a high length bc vertical accel can be high so it needs to check farther down
       };
       
       for(const prop in this.raycasters) {
@@ -213,6 +213,7 @@ document.addEventListener("keyup", onKeyUp, false);
       }
       
       //move object relative to world
+      this.object.position.add(this.worldVel.clone().multiplyScalar(delta));
 
      let info = document.querySelector('.info');
         info.innerHTML = `world x vel: ${this.worldVel.x} <br>
