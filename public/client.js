@@ -23,7 +23,7 @@ scene.add(mesh);
 attachResizeListener(renderer, camera);
 
 //add controls
-let pointerLock = new PointerLockControls(camera);
+let pointerLock = new PointerLockControls(scene, camera);
 scene.add(pointerLock.controls.getObject());
 
 //add all objects that the player needs to interact with physically

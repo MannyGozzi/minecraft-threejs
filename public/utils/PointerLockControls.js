@@ -1,7 +1,7 @@
 //TODO work on collisions
 //get all surrounding voxels from the current position and make them into collision objects
 export default class PointerLockControls {
-  constructor(camera) {
+  constructor(scene, camera) {
     this.controls;
     this.controlsEnabled = true;
     this.moveForward = false;
@@ -19,6 +19,7 @@ export default class PointerLockControls {
     this.object.position.x += 12;
     this.object.position.z += 5;
     this.worldVel = new THREE.Vector3();
+    this.scene = scene;
     
     this.objects = [];
     this.direction = new THREE.Vector3();
@@ -224,10 +225,9 @@ document.addEventListener("keyup", onKeyUp, false);
 
 
      let info = document.querySelector('.info');
-        info.innerHTML = `world x vel: ${this.worldVel.x} <br>
-                                           world y vel: ${this.velocity.y} <br>
-                                           world z vel: ${this.worldVel.z}<br>
-                                           yRot           : ${this.object.rotation.y}`;
+        info.innerHTML = `x: ${this.worldVel.x} <br>
+                                           y: ${this.velocity.y} <br>
+                                           z: ${this.object.getWorldPosition()}`;
       this.prevTime = time;
     }
   }
