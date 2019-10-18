@@ -11,8 +11,9 @@ export default class PointerLockControls {
     this.velocity = new THREE.Vector3();
     this.controls = new THREE.PointerLockControls(camera);
     this.object = this.controls.getObject();
-    this.object.position.y += 70;
+    this.object.position.y += 200;
     this.object.position.x += 5;
+    this.object.position.z += 5;
     
     this.objects = [];
     this.direction = new THREE.Vector3();
@@ -165,7 +166,7 @@ document.addEventListener("keyup", onKeyUp, false);
       
       this.velocity.x -= this.velocity.x * 10.0 * delta;
       this.velocity.z -= this.velocity.z * 10.0 * delta;
-      this.velocity.y -= 9.8 * 1 * delta; // 100.0 = mass
+      this.velocity.y -= 9.8 * 3 * delta; // 100.0 = mass
       this.direction.z = Number( this.moveForward ) - Number( this.moveBackward );
       this.direction.x = Number( this.moveRight ) - Number( this.moveLeft );
       this.direction.normalize(); // this ensures consistent movements in all directions
@@ -181,11 +182,12 @@ document.addEventListener("keyup", onKeyUp, false);
         back:    new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( 0, 0, -1 ).applyAxisAngle(axis, angle), 0, 1),
         front:     new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( 0, 0, 1 ).applyAxisAngle(axis, angle), 0, 1 ),
         top:        new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( 0, 1, 0 ).applyAxisAngle(axis, angle), 0, 1 ),
-        bottom: new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( 0, -1, 0 ).applyAxisAngle(axis, angle), 0, 10 )
+        bottom: new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( 0, -1, 0 ).applyAxisAngle(axis, angle), 0, Math.abs(this.velocity.y))
       };
       
       for(const prop in this.raycasters) {
         this.raycasters[prop].ray.origin.copy(this.controls.getObject().position );
+        if(prop=='bottom') {this.raycasters[prop].ray.origin.y += Math.abs(this.velocity.y) - 2;}
         if(prop=="left" && this.raycasters[prop].intersectObjects( this.objects ).length>0) {this.velocity.x=Math.max( this.velocity.x, 0 );}
         if(prop=="right" && this.raycasters[prop].intersectObjects( this.objects ).length>0) {this.velocity.x=Math.min( this.velocity.x, 0 );}
         if(prop=="back" && this.raycasters[prop].intersectObjects( this.objects ).length>0) {this.velocity.z=Math.max( this.velocity.z, 0 );}
