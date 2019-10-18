@@ -17,13 +17,12 @@ const pointLight = PointLight(); scene.add(pointLight);
 const ambientLight = AmbientLight(); scene.add(ambientLight);
 
 //VOXEL WORLD CREATION
-const {mesh, world}  = buildWorld(); 
-scene.add(mesh);
+const {mesh, world}  = buildWorld(); scene.add(mesh);
 
 attachResizeListener(renderer, camera);
 
 //add controls
-let pointerLock = new PointerLockControls(scene, camera);
+let pointerLock = new PointerLockControls(camera);
 scene.add(pointerLock.controls.getObject());
 
 //add all objects that the player needs to interact with physically
@@ -34,6 +33,6 @@ render();
 
 function render() {
   renderer.render(scene, camera);
-  pointerLock.update();
+  pointerLock.update(scene);
   window.requestAnimationFrame(render);
 }

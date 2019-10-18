@@ -59,6 +59,6 @@ export default function buildWorld() {
   const mesh = new THREE.Mesh(geometry, material);
   mesh.geometry.computeBoundingBox();
   mesh.geometry.computeBoundingSphere();
-  mesh.name = 'cell';
+  mesh.name = 'cell'
   return {world: world, mesh: mesh};
 }

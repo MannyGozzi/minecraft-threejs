@@ -1,7 +1,7 @@
 //TODO work on collisions
 //get all surrounding voxels from the current position and make them into collision objects
 export default class PointerLockControls {
-  constructor(scene, camera) {
+  constructor(camera) {
     this.controls;
     this.controlsEnabled = true;
     this.moveForward = false;
@@ -13,10 +13,12 @@ export default class PointerLockControls {
     this.velocity = new THREE.Vector3();
     this.controls = new THREE.PointerLockControls(camera);
     this.object = this.controls.getObject();
-    this.object.rotation.order = 'YZX';
-    this.gravityIntensity = 1;
+    this.object.rotation.order = 'YXZ';
+    this.gravityIntensity = 0.0001;
+    this.object.position.y = 200;
+    this.object.position.x += 12;
+    this.object.position.z += 5;
     this.worldVel = new THREE.Vector3();
-    this.scene = scene;
     
     this.objects = [];
     this.direction = new THREE.Vector3();
@@ -160,7 +162,7 @@ document.addEventListener("keyup", onKeyUp, false);
     this.objects.push(object);
   }
 
-  update() {
+  update(scene) {
     if (this.controlsEnabled) {
       const speed = 3.0;
       const time = performance.now();
@@ -186,12 +188,12 @@ document.addEventListener("keyup", onKeyUp, false);
       
       
       this.raycasters = {
-        left:       new THREE.Raycaster( this.object.position.clone(), new THREE.Vector3( -1, 0, 0 ), 0, 1),
-        right:     new THREE.Raycaster( this.object.position.clone(), new THREE.Vector3( 1, 0, 0 ), 0, 1),
-        back:    new THREE.Raycaster( this.object.position.clone(), new THREE.Vector3( 0, 0, -1 ), 0, 1),
-        front:     new THREE.Raycaster( this.object.position.clone(), new THREE.Vector3( 0, 0, 1 ), 0, 1 ),
-        top:        new THREE.Raycaster( this.object.position.clone(), new THREE.Vector3( 0, 1, 0 ), 0, 1 ),
-        bottom: new THREE.Raycaster( this.object.position.clone(), new THREE.Vector3( 0, -1, 0 ), 0, Math.abs(this.velocity.y ) ) //set a high length bc vertical accel can be high so it needs to check farther down
+        left:       new THREE.Raycaster( this.object.position, new THREE.Vector3( -1, 0, 0 ), 0, 1),
+        right:     new THREE.Raycaster( this.object.position, new THREE.Vector3( 1, 0, 0 ), 0, 1),
+        back:    new THREE.Raycaster( this.object.position, new THREE.Vector3( 0, 0, -1 ), 0, 1),
+        front:     new THREE.Raycaster( this.object.position, new THREE.Vector3( 0, 0, 1 ), 0, 1 ),
+        top:        new THREE.Raycaster( this.object.position, new THREE.Vector3( 0, 1, 0 ), 0, 1 ),
+        bottom: new THREE.Raycaster( this.object.position, new THREE.Vector3( 0, -1, 0 ), 0, Math.abs(this.velocity.y ) ) //set a high length bc vertical accel can be high so it needs to check farther down
       };
       
       for(const prop in this.raycasters) {
@@ -211,17 +213,16 @@ document.addEventListener("keyup", onKeyUp, false);
       }
       
       //move object relative to world
-      //TODO convert worldVel to object relative vel
-      const move = this.worldVel.clone().applyEuler(new THREE.Euler(0, -yRot, 0)).multiplyScalar(delta);
-      this.object.position.x += move.x;
-      this.object.position.y += move.y;
-      this.object.position.z += move.z;      
+      this.controls.getObject().position.add(this.worldVel.clone().multiplyScalar(delta));
 
      let info = document.querySelector('.info');
-        info.innerHTML = `x: ${this.worldVel.x} <br>
-                                           y: ${this.worldVel.y} <br>
-                                           z: ${this.worldVel.z}`;
+        info.innerHTML = `world x vel: ${this.worldVel.x} <br>
+                                           world y vel: ${this.velocity.y} <br>
+                                           world z vel: ${this.worldVel.z}<br>
+                                           yRot           : ${this.object.rotation.y}`;
       this.prevTime = time;
     }
   }
 }
+
+// TODO if last pos changes left, right, back or whatever only then check raycasters
