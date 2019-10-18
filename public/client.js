@@ -33,6 +33,6 @@ render();
 
 function render() {
   renderer.render(scene, camera);
-  pointerLock.update();
+  pointerLock.update(scene);
   window.requestAnimationFrame(render);
 }
