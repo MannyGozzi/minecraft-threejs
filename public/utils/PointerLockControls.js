@@ -210,9 +210,12 @@ document.addEventListener("keyup", onKeyUp, false);
           this.canJump = true;
       }
       
-      this.object.position.x += this.velocity.x * delta;
-      this.object.position.y += this.velocity.y * delta;
-      this.object.position.z += this.velocity.z * delta;      
+      //move object relative to world
+      //TODO convert worldVel to object relative vel
+      const move = this.worldVel.clone().applyEuler(new THREE.Euler(0, -yRot, 0)).multiplyScalar(delta);
+      this.object.position.x += move.x;
+      this.object.position.y += move.y;
+      this.object.position.z += move.z;      
 
      let info = document.querySelector('.info');
         info.innerHTML = `x: ${this.worldVel.x} <br>
