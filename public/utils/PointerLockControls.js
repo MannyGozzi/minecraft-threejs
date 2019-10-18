@@ -212,11 +212,10 @@ document.addEventListener("keyup", onKeyUp, false);
       
       //move object relative to world
       //TODO convert worldVel to object relative vel
-      let move = this.worldVel.clone();
-      this.object.worldToLocal(move);
-      this.object.position.set(move.x, move.y, move.z);
-
-
+      const move = this.worldVel.clone().applyEuler(new THREE.Euler(0, -yRot, 0)).multiplyScalar(delta);
+      this.object.position.x += move.x;
+      this.object.position.y += move.y;
+      this.object.position.z += move.z;      
 
      let info = document.querySelector('.info');
         info.innerHTML = `x: ${this.worldVel.x} <br>
