@@ -162,7 +162,7 @@ document.addEventListener("keyup", onKeyUp, false);
     this.objects.push(object);
   }
 
-  update(scene) {
+  update() {
     if (this.controlsEnabled) {
       const speed = 3.0;
       const time = performance.now();
@@ -213,7 +213,6 @@ document.addEventListener("keyup", onKeyUp, false);
       }
       
       //move object relative to world
-      this.controls.getObject().position.add(this.worldVel.clone().multiplyScalar(delta));
 
      let info = document.querySelector('.info');
         info.innerHTML = `world x vel: ${this.worldVel.x} <br>
