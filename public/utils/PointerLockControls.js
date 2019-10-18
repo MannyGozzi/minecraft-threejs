@@ -14,7 +14,7 @@ export default class PointerLockControls {
     this.controls = new THREE.PointerLockControls(camera);
     this.object = this.controls.getObject();
     this.object.rotation.order = 'YZX';
-    this.gravityIntensity = 0.1;
+    this.gravityIntensity = 1;
     this.object.position.y = 50;
     this.object.position.x += 12;
     this.object.position.z += 5;
@@ -214,9 +214,8 @@ document.addEventListener("keyup", onKeyUp, false);
       
       //move object relative to world
       //TODO convert worldVel to object relative vel
-      const rotation = this.object.rotation.clone();
-      this.object.setRotation(0, 0, 0);
-      this.object.position.add(this.worldVel.clone().multipl);
+      let tempVel = new THREE.Vector3();
+      tempVel.x = Math.cos(yRot) * this.worldVel - this.worldVel.z
 
      let info = document.querySelector('.info');
         info.innerHTML = `world x vel: ${this.worldVel.x} <br>
