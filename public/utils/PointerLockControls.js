@@ -215,7 +215,13 @@ document.addEventListener("keyup", onKeyUp, false);
       //move object relative to world
       //TODO convert worldVel to object relative vel
       let tempVel = new THREE.Vector3();
-      tempVel.x = Math.cos(yRot) * this.worldVel - this.worldVel.z
+      tempVel.x = Math.cos(yRot) * this.worldVel.x - Math.sin(yRot) * this.worldVel.x;
+      tempVel.z = Math.cos(yRot) * this.worldVel.z + Math.sin(yRot) * this.worldVel.x;
+      tempVel.y = this.worldVel.y;
+      this.object.position.x -= tempVel.x * delta;
+      this.object.position.y += tempVel.y * delta;
+      this.object.position.z -= tempVel.z * delta;
+
 
      let info = document.querySelector('.info');
         info.innerHTML = `world x vel: ${this.worldVel.x} <br>
