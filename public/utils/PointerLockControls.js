@@ -1,5 +1,3 @@
-//TODO work on collisions
-//get all surrounding voxels from the current position and make them into collision objects
 export default class PointerLockControls {
   constructor(camera) {
     this.controls;
@@ -13,8 +11,8 @@ export default class PointerLockControls {
     this.velocity = new THREE.Vector3();
     this.controls = new THREE.PointerLockControls(camera);
     this.object = this.controls.getObject();
-    this.object.position.y += 90;
-    this.object.position.x += 5.2;
+    this.object.position.y += 70;
+    this.object.position.x += 5;
     
     this.objects = [];
     this.direction = new THREE.Vector3();
@@ -160,27 +158,19 @@ document.addEventListener("keyup", onKeyUp, false);
 
   update() {
     if (this.controlsEnabled) {
-      const speed = 2.0;
+      const speed = 50.0;
       const time = performance.now();
-      const friction = 0.01;
       const delta = (time - this.prevTime) / 1000;
       let onObject;
       
-      //add friction to velocity vectors
-      this.velocity.x *= Math.pow(friction, delta);
-      this.velocity.z *= Math.pow(friction, delta);
-      
-      //add gravity
-      this.velocity.y -= 9.8 * 3 * delta; // 100.0 = mass
-      
-      if (this.moveRight) this.velocity.x += speed;
-      if (this.moveLeft) this.velocity.x -= speed;
-      if (this.moveForward) this.velocity.z += speed;
-      if (this.moveBackward) this.velocity.z -= speed;
-      const yVel = this.velocity.y;
-      this.velocity.normalize();
-      this.velocity.multiplyScalar(speed);
-      this.velocity.y = yVel;
+      this.velocity.x -= this.velocity.x * 10.0 * delta;
+      this.velocity.z -= this.velocity.z * 10.0 * delta;
+      this.velocity.y -= 9.8 * 1 * delta; // 100.0 = mass
+      this.direction.z = Number( this.moveForward ) - Number( this.moveBackward );
+      this.direction.x = Number( this.moveRight ) - Number( this.moveLeft );
+      this.direction.normalize(); // this ensures consistent movements in all directions
+      if ( this.moveForward || this.moveBackward ) this.velocity.z -= this.direction.z * speed * delta;
+      if ( this.moveLeft || this.moveRight ) this.velocity.x -= this.direction.x * speed * delta;
       
       const axis = new THREE.Vector3( 0, 1, 0 );
       const angle = this.object.rotation.y;
@@ -191,7 +181,7 @@ document.addEventListener("keyup", onKeyUp, false);
         back:    new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( 0, 0, -1 ).applyAxisAngle(axis, angle), 0, 1),
         front:     new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( 0, 0, 1 ).applyAxisAngle(axis, angle), 0, 1 ),
         top:        new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( 0, 1, 0 ).applyAxisAngle(axis, angle), 0, 1 ),
-        bottom: new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( 0, -1, 0 ).applyAxisAngle(axis, angle), 0, 2 )
+        bottom: new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( 0, -1, 0 ).applyAxisAngle(axis, angle), 0, 10 )
       };
       
       for(const prop in this.raycasters) {
@@ -209,8 +199,8 @@ document.addEventListener("keyup", onKeyUp, false);
           this.canJump = true;
       }
 
-      this.controls.moveRight( this.velocity.x * delta );
-      this.controls.moveForward( this.velocity.z * delta );
+      this.controls.moveRight( - this.velocity.x * delta );
+      this.controls.moveForward( - this.velocity.z * delta );
       this.controls.getObject().position.y += ( this.velocity.y * delta ); // new behavior
 
      let info = document.querySelector('.info');
