@@ -15,7 +15,6 @@ export default class PointerLockControls {
     this.object = this.controls.getObject();
     this.object.position.y += 90;
     this.object.position.x += 5.2;
-    this.arrow;
     
     this.objects = [];
     this.direction = new THREE.Vector3();
@@ -159,21 +158,17 @@ document.addEventListener("keyup", onKeyUp, false);
     this.objects.push(object);
   }
 
-  update(scene) {
+  update() {
     if (this.controlsEnabled) {
-      scene.remove(this.arrow);
-      this.arrow = new THREE.ArrowHelper( THREE.Vector3(0, 0, 1),  this, 100, Math.random() * 0xffffff );
-      scene.add( this.arrow );
-      const speed = 3.0;
+      const speed = 2.0;
       const time = performance.now();
-      const friction = 0.5;
+      const friction = 0.01;
       const delta = (time - this.prevTime) / 1000;
       let onObject;
-  
       
       //add friction to velocity vectors
-      this.velocity.x *= friction;
-      this.velocity.z *= friction;
+      this.velocity.x *= Math.pow(friction, delta);
+      this.velocity.z *= Math.pow(friction, delta);
       
       //add gravity
       this.velocity.y -= 9.8 * 3 * delta; // 100.0 = mass
@@ -182,6 +177,10 @@ document.addEventListener("keyup", onKeyUp, false);
       if (this.moveLeft) this.velocity.x -= speed;
       if (this.moveForward) this.velocity.z += speed;
       if (this.moveBackward) this.velocity.z -= speed;
+      const yVel = this.velocity.y;
+      this.velocity.normalize();
+      this.velocity.multiplyScalar(speed);
+      this.velocity.y = yVel;
       
       const axis = new THREE.Vector3( 0, 1, 0 );
       const angle = this.object.rotation.y;
