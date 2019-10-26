@@ -214,11 +214,11 @@ document.addEventListener("keyup", onKeyUp, false);
       this.controls.moveRight( this.velocity.x * delta );
       this.controls.moveForward( this.velocity.z * delta );
       this.controls.getObject().position.y += ( this.velocity.y * delta ); // new behavior
-      if(!canMoveLeft && this.object.position.x < prevPos.x)   
-      if(!canMoveRight && this.object.position.x > prevPos.x)  
-      if(!canMoveBack && this.object.position.z > prevPos.x)   
-      if(!canMoveFront)  
-      if(!canMoveTop)    
+      if(!canMoveLeft && this.object.position.x < prevPos.x)   this.object.position.x = prevPos.x;
+      if(!canMoveRight && this.object.position.x > prevPos.x)  this.object.position.x = prevPos.x;
+      if(!canMoveBack && this.object.position.z > prevPos.z)   this.object.position.z = prevPos.z;
+      if(!canMoveFront && this.object.position.z < prevPos.z)  this.object.position.z = prevPos.z;
+      if(!canMoveTop && this.object.position.y > prevPos.z)    this.object.position.y = prevPos.y;
 
      let info = document.querySelector('.info');
         info.innerHTML = ` x vel: ${this.object.position.x} <br>
