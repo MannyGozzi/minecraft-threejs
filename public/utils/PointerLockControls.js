@@ -11,9 +11,10 @@ export default class PointerLockControls {
     this.velocity = new THREE.Vector3();
     this.controls = new THREE.PointerLockControls(camera);
     this.object = this.controls.getObject();
-    this.object.position.y += 200;
+    this.object.position.y += 100;
     this.object.position.x += 5;
     this.object.position.z += 5;
+    this.gravityFactor = 1.0;
     
     this.objects = [];
     this.direction = new THREE.Vector3();
@@ -167,7 +168,7 @@ document.addEventListener("keyup", onKeyUp, false);
       // add friction and gravity
       this.velocity.x -= this.velocity.x * 10.0 * delta;
       this.velocity.z -= this.velocity.z * 10.0 * delta;
-      this.velocity.y -= 9.8 * 3 * delta; // 100.0 = mass
+      this.velocity.y -= 9.8 * this.gravityFactor * delta; // 100.0 = mass
       
       // this ensures consistent movements in all directions
       this.direction.z = Number( this.moveForward ) - Number( this.moveBackward );
@@ -177,12 +178,12 @@ document.addEventListener("keyup", onKeyUp, false);
       if ( this.moveLeft || this.moveRight ) this.velocity.x += this.direction.x * speed * delta;
       
       this.raycasters = {
-        left:       new THREE.Raycaster( this.object.position.clone(), new THREE.Vector3( -1, 0, 0 ), 0, 1),
-        right:     new THREE.Raycaster( this.object.position.clone(), new THREE.Vector3( 1, 0, 0 ), 0, 1),
-        back:    new THREE.Raycaster( this.object.position.clone(), new THREE.Vector3( 0, 0, 1 ), 0, 1),
-        front:     new THREE.Raycaster( this.object.position.clone(), new THREE.Vector3( 0, 0, -1 ), 0, 1 ),
-        top:        new THREE.Raycaster( this.object.position.clone(), new THREE.Vector3( 0, 1, 0 ), 0, 1 ),
-        bottom: new THREE.Raycaster( this.object.position.clone(), new THREE.Vector3( 0, -1, 0 ), 0, Math.abs(this.velocity.y))
+        left:      new THREE.Raycaster( this.object.position.clone(), new THREE.Vector3( -1, 0, 0 ), 0, 0.3),
+        right:     new THREE.Raycaster( this.object.position.clone(), new THREE.Vector3( 1, 0, 0 ),  0, 0.3),
+        back:      new THREE.Raycaster( this.object.position.clone(), new THREE.Vector3( 0, 0, 1 ),  0, 0.3),
+        front:     new THREE.Raycaster( this.object.position.clone(), new THREE.Vector3( 0, 0, -1 ), 0, 0.3),
+        top:       new THREE.Raycaster( this.object.position.clone(), new THREE.Vector3( 0, 1, 0 ),  0, 0.3),
+        bottom:    new THREE.Raycaster( this.object.position.clone(), new THREE.Vector3( 0, -1, 0 ), 0, this.velocity.y < 0 ? -this.velocity.y : 1)
       };
       
       let canMoveLeft   = true;
@@ -217,13 +218,12 @@ document.addEventListener("keyup", onKeyUp, false);
       if(!canMoveTop && this.object.position.y > prevPos.z)    this.object.position.y = prevPos.y;
 
      let info = document.querySelector('.info');
-        info.innerHTML = ` moveFront: ${canMoveFront} <br>
+        info.innerHTML = `
                            x vel: ${this.object.position.x} <br>
                            y vel: ${this.object.position.y} <br>
-                           z vel: ${this.object.position.z}`;
+                           z vel: ${this.object.position.z} <br>
+                          `;
       this.prevTime = time;
     }
   }
 }
-
-// TODO if last pos changes left, right, back or whatever only then check raycasters
