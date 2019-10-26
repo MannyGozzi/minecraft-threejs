@@ -188,25 +188,37 @@ document.addEventListener("keyup", onKeyUp, false);
         bottom: new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( 0, -1, 0 ).applyAxisAngle(axis, angle), 0, Math.abs(this.velocity.y))
       };
       
+      let canMoveLeft;
+      let canMoveRight;
+      let canMoveBack;
+      let canMoveFront;
+      let canMoveTop;
+      
       for(const prop in this.raycasters) {
         this.raycasters[prop].ray.origin.copy(this.controls.getObject().position );
-        if(prop=='bottom') {this.raycasters[prop].ray.origin.y += Math.abs(this.velocity.y) - 2;}
-        if(prop=="left" && this.raycasters[prop].intersectObjects( this.objects ).length>0) {this.velocity.x=Math.max( this.velocity.x, 0 );}
-        if(prop=="right" && this.raycasters[prop].intersectObjects( this.objects ).length>0) {this.velocity.x=Math.min( this.velocity.x, 0 );}
-        if(prop=="back" && this.raycasters[prop].intersectObjects( this.objects ).length>0) {this.velocity.z=Math.max( this.velocity.z, 0 );}
-        if(prop=="front" && this.raycasters[prop].intersectObjects( this.objects ).length>0) {this.velocity.z=Math.min( this.velocity.z, 0 );}
-        if(prop=="top" && this.raycasters[prop].intersectObjects( this.objects ).length>0) {this.velocity.y=Math.min( this.velocity.y, 0 );}
-        if(prop=="bottom" && this.raycasters[prop].intersectObjects( this.objects ).length>0) {onObject = true;}
+        const hasInterects = this.raycasters[prop].intersectObjects( this.objects ).length > 0;
+        if(prop=='bottom') {this.raycasters[prop].ray.origin.y += Math.abs(this.velocity.y) - 2; }
+        if(prop=="left"     && hasInterects) canMoveLeft    = false;
+        if(prop=="right"    && hasInterects) canMoveRight   = false;
+        if(prop=="back"     && hasInterects) canMoveBack    = false;
+        if(prop=="front"    && hasInterects) canMoveFront   = false;
+        if(prop=="top"      && hasInterects) canMoveTop     = false;
+        if(prop=="bottom"   && hasInterects) { onObject = true; }
       }
       
         if ( onObject === true ) {
           this.velocity.y = Math.max( 0, this.velocity.y );
           this.canJump = true;
       }
-
+      const prevPos = this.object.position;
       this.controls.moveRight( this.velocity.x * delta );
       this.controls.moveForward( this.velocity.z * delta );
       this.controls.getObject().position.y += ( this.velocity.y * delta ); // new behavior
+      if(!canMoveLeft && this.object.position.x < prevPos.x)   
+      if(!canMoveRight && this.object.position.x > prevPos.x)  
+      if(!canMoveBack && this.object.position.z > prevPos.x)   
+      if(!canMoveFront)  
+      if(!canMoveTop)    
 
      let info = document.querySelector('.info');
         info.innerHTML = ` x vel: ${this.object.position.x} <br>
