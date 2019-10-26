@@ -177,12 +177,12 @@ document.addEventListener("keyup", onKeyUp, false);
       if ( this.moveLeft || this.moveRight ) this.velocity.x += this.direction.x * speed * delta;
       
       this.raycasters = {
-        left:       new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( -1, 0, 0 ), 0, 1),
-        right:     new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( 1, 0, 0 ), 0, 1),
-        back:    new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( 0, 0, -1 ), 0, 1),
-        front:     new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( 0, 0, 1 ), 0, 1 ),
-        top:        new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( 0, 1, 0 ), 0, 1 ),
-        bottom: new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( 0, -1, 0 ), 0, Math.abs(this.velocity.y))
+        left:       new THREE.Raycaster( this.object.position.clone(), new THREE.Vector3( -1, 0, 0 ), 0, 1),
+        right:     new THREE.Raycaster( this.object.position.clone(), new THREE.Vector3( 1, 0, 0 ), 0, 1),
+        back:    new THREE.Raycaster( this.object.position.clone(), new THREE.Vector3( 0, 0, 1 ), 0, 1),
+        front:     new THREE.Raycaster( this.object.position.clone(), new THREE.Vector3( 0, 0, -1 ), 0, 1 ),
+        top:        new THREE.Raycaster( this.object.position.clone(), new THREE.Vector3( 0, 1, 0 ), 0, 1 ),
+        bottom: new THREE.Raycaster( this.object.position.clone(), new THREE.Vector3( 0, -1, 0 ), 0, Math.abs(this.velocity.y))
       };
       
       let canMoveLeft   = true;
@@ -192,9 +192,8 @@ document.addEventListener("keyup", onKeyUp, false);
       let canMoveTop    = true;
       
       for(const prop in this.raycasters) {
-        this.raycasters[prop].ray.origin.copy(this.controls.getObject().position );
         const hasInterects = this.raycasters[prop].intersectObjects( this.objects ).length > 0;
-        if(prop=='bottom') {this.raycasters[prop].ray.origin.y += Math.abs(this.velocity.y) - 2; }
+        if(prop=='bottom') {this.raycasters[prop].ray.origin.y += Math.abs(this.velocity.y) - 1; }
         if(prop=="left"     && hasInterects) canMoveLeft    = false;
         if(prop=="right"    && hasInterects) canMoveRight   = false;
         if(prop=="back"     && hasInterects) canMoveBack    = false;
@@ -207,7 +206,7 @@ document.addEventListener("keyup", onKeyUp, false);
           this.velocity.y = Math.max( 0, this.velocity.y );
           this.canJump = true;
       }
-      const prevPos = this.object.position;
+      const prevPos = this.object.position.clone();
       this.controls.moveRight( this.velocity.x * delta );
       this.controls.moveForward( this.velocity.z * delta );
       this.controls.getObject().position.y += ( this.velocity.y * delta ); // new behavior
@@ -218,7 +217,8 @@ document.addEventListener("keyup", onKeyUp, false);
       if(!canMoveTop && this.object.position.y > prevPos.z)    this.object.position.y = prevPos.y;
 
      let info = document.querySelector('.info');
-        info.innerHTML = ` x vel: ${this.object.position.x} <br>
+        info.innerHTML = ` moveFront: ${canMoveFront} <br>
+                           x vel: ${this.object.position.x} <br>
                            y vel: ${this.object.position.y} <br>
                            z vel: ${this.object.position.z}`;
       this.prevTime = time;
