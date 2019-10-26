@@ -164,14 +164,17 @@ document.addEventListener("keyup", onKeyUp, false);
       const delta = (time - this.prevTime) / 1000;
       let onObject;
       
+      // add friction and gravity
       this.velocity.x -= this.velocity.x * 10.0 * delta;
       this.velocity.z -= this.velocity.z * 10.0 * delta;
       this.velocity.y -= 9.8 * 3 * delta; // 100.0 = mass
+      
+      // this ensures consistent movements in all directions
       this.direction.z = Number( this.moveForward ) - Number( this.moveBackward );
       this.direction.x = Number( this.moveRight ) - Number( this.moveLeft );
-      this.direction.normalize(); // this ensures consistent movements in all directions
-      if ( this.moveForward || this.moveBackward ) this.velocity.z -= this.direction.z * speed * delta;
-      if ( this.moveLeft || this.moveRight ) this.velocity.x -= this.direction.x * speed * delta;
+      this.direction.normalize(); 
+      if ( this.moveForward || this.moveBackward ) this.velocity.z += this.direction.z * speed * delta;
+      if ( this.moveLeft || this.moveRight ) this.velocity.x += this.direction.x * speed * delta;
       
       const axis = new THREE.Vector3( 0, 1, 0 );
       const angle = this.object.rotation.y;
@@ -201,8 +204,8 @@ document.addEventListener("keyup", onKeyUp, false);
           this.canJump = true;
       }
 
-      this.controls.moveRight( - this.velocity.x * delta );
-      this.controls.moveForward( - this.velocity.z * delta );
+      this.controls.moveRight( this.velocity.x * delta );
+      this.controls.moveForward( this.velocity.z * delta );
       this.controls.getObject().position.y += ( this.velocity.y * delta ); // new behavior
 
      let info = document.querySelector('.info');
