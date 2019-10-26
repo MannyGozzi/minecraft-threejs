@@ -176,23 +176,20 @@ document.addEventListener("keyup", onKeyUp, false);
       if ( this.moveForward || this.moveBackward ) this.velocity.z += this.direction.z * speed * delta;
       if ( this.moveLeft || this.moveRight ) this.velocity.x += this.direction.x * speed * delta;
       
-      const axis = new THREE.Vector3( 0, 1, 0 );
-      const angle = this.object.rotation.y;
-      
       this.raycasters = {
-        left:       new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( -1, 0, 0 ).applyAxisAngle(axis, angle), 0, 1),
-        right:     new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( 1, 0, 0 ).applyAxisAngle(axis, angle), 0, 1),
-        back:    new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( 0, 0, -1 ).applyAxisAngle(axis, angle), 0, 1),
-        front:     new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( 0, 0, 1 ).applyAxisAngle(axis, angle), 0, 1 ),
-        top:        new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( 0, 1, 0 ).applyAxisAngle(axis, angle), 0, 1 ),
-        bottom: new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( 0, -1, 0 ).applyAxisAngle(axis, angle), 0, Math.abs(this.velocity.y))
+        left:       new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( -1, 0, 0 ), 0, 1),
+        right:     new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( 1, 0, 0 ), 0, 1),
+        back:    new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( 0, 0, -1 ), 0, 1),
+        front:     new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( 0, 0, 1 ), 0, 1 ),
+        top:        new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( 0, 1, 0 ), 0, 1 ),
+        bottom: new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( 0, -1, 0 ), 0, Math.abs(this.velocity.y))
       };
       
-      let canMoveLeft;
-      let canMoveRight;
-      let canMoveBack;
-      let canMoveFront;
-      let canMoveTop;
+      let canMoveLeft   = true;
+      let canMoveRight  = true;
+      let canMoveBack   = true;
+      let canMoveFront  = true;
+      let canMoveTop    = true;
       
       for(const prop in this.raycasters) {
         this.raycasters[prop].ray.origin.copy(this.controls.getObject().position );
