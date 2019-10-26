@@ -206,9 +206,9 @@ document.addEventListener("keyup", onKeyUp, false);
       this.controls.getObject().position.y += ( this.velocity.y * delta ); // new behavior
 
      let info = document.querySelector('.info');
-        info.innerHTML = `x vel: ${-this.velocity.x} <br>
-                                           y vel: ${this.velocity.y} <br>
-                                           z vel: ${-this.velocity.z}`;
+        info.innerHTML = ` x vel: ${this.object.position.x} <br>
+                           y vel: ${this.object.position.y} <br>
+                           z vel: ${this.object.position.z}`;
       this.prevTime = time;
     }
   }
