@@ -12,9 +12,9 @@ export default class PointerLockControls {
     this.controls = new THREE.PointerLockControls(camera);
     this.object = this.controls.getObject();
     this.object.position.y += 80;
-    this.object.position.x += 5.2;
-    this.object.position.z += 5.2;
-    this.gravityFactor = 3.0;
+    this.object.position.x += 5.25;
+    this.object.position.z += 5.25;
+    this.gravityFactor = 2.0;
     this.jumpVel = 15;
     
     this.objects = [];
@@ -23,133 +23,133 @@ export default class PointerLockControls {
 
     
     let blocker = document.getElementById("blocker");
-let instructions = document.getElementById("instructions");
-let havePointerLock =
-  "pointerLockElement" in document ||
-  "mozPointerLockElement" in document ||
-  "webkitPointerLockElement" in document;
-if (havePointerLock) {
-  let element = document.body;
-  let pointerlockchange = function(event) {
-    if (
-      document.pointerLockElement === element ||
-      document.mozPointerLockElement === element ||
-      document.webkitPointerLockElement === element
-    ) {
-      this.controlsEnabled = true;
-      blocker.style.display = "none";
-    } else {
-      blocker.style.display = "-webkit-box";
-      blocker.style.display = "-moz-box";
-      blocker.style.display = "box";
+    let instructions = document.getElementById("instructions");
+    let havePointerLock =
+      "pointerLockElement" in document ||
+      "mozPointerLockElement" in document ||
+      "webkitPointerLockElement" in document;
+  if (havePointerLock) {
+    let element = document.body;
+    let pointerlockchange = function(event) {
+      if (
+        document.pointerLockElement === element ||
+        document.mozPointerLockElement === element ||
+        document.webkitPointerLockElement === element
+      ) {
+        this.controlsEnabled = true;
+        blocker.style.display = "none";
+      } else {
+        blocker.style.display = "-webkit-box";
+        blocker.style.display = "-moz-box";
+        blocker.style.display = "box";
+        instructions.style.display = "";
+      }
+    };
+    let pointerlockerror = function(event) {
       instructions.style.display = "";
+    };
+    // Hook pointer lock state change events
+    document.addEventListener("pointerlockchange", pointerlockchange, false);
+    document.addEventListener("mozpointerlockchange", pointerlockchange, false);
+    document.addEventListener("webkitpointerlockchange", pointerlockchange, false);
+    document.addEventListener("pointerlockerror", pointerlockerror, false);
+    document.addEventListener("mozpointerlockerror", pointerlockerror, false);
+    document.addEventListener("webkitpointerlockerror", pointerlockerror, false);
+    instructions.addEventListener(
+      "click",
+      function(event) {
+        instructions.style.display = "none";
+        // Ask the browser to lock the pointer
+        element.requestPointerLock =
+          element.requestPointerLock ||
+          element.mozRequestPointerLock ||
+          element.webkitRequestPointerLock;
+        if (/Firefox/i.test(navigator.userAgent)) {
+          let fullscreenchange = function(event) {
+            if (
+              document.fullscreenElement === element ||
+              document.mozFullscreenElement === element ||
+              document.mozFullScreenElement === element
+            ) {
+              document.rethis.moveEventListener("fullscreenchange", fullscreenchange);
+              document.rethis.moveEventListener(
+                "mozfullscreenchange",
+                fullscreenchange
+              );
+              element.requestPointerLock();
+            }
+          };
+          document.addEventListener("fullscreenchange", fullscreenchange, false);
+          document.addEventListener(
+            "mozfullscreenchange",
+            fullscreenchange,
+            false
+          );
+          element.requestFullscreen =
+            element.requestFullscreen ||
+            element.mozRequestFullscreen ||
+            element.mozRequestFullScreen ||
+            element.webkitRequestFullscreen;
+          element.requestFullscreen();
+        } else {
+          element.requestPointerLock();
+        }
+      },
+      false
+    );
+  } else {
+    instructions.innerHTML =
+      "Your browser doesn't seem to support Pointer Lock API";
+  }
+
+  let onKeyDown = (event) => {
+
+    switch (event.keyCode) {
+      case 38: // up
+      case 87: // w
+        this.moveForward = true;
+        break;
+      case 37: // left
+      case 65: // a
+        this.moveLeft = true;
+        break;
+      case 40: // down
+      case 83: // s
+        this.moveBackward = true;
+        break;
+      case 39: // right
+      case 68: // d
+        this.moveRight = true;
+        break;
+      case 32: // space
+        if (this.canJump === true) this.velocity.y = this.jumpVel;
+        this.canJump = false;
+        break;
     }
   };
-  let pointerlockerror = function(event) {
-    instructions.style.display = "";
+  let onKeyUp = (event) => {
+    switch (event.keyCode) {
+      case 38: // up
+      case 87: // w
+        this.moveForward = false;
+        break;
+      case 37: // left
+      case 65: // a
+        this.moveLeft = false;
+        break;
+      case 40: // down
+      case 83: // s
+        this.moveBackward = false;
+        break;
+      case 39: // right
+      case 68: // d
+        this.moveRight = false;
+        break;
+    }
   };
-  // Hook pointer lock state change events
-  document.addEventListener("pointerlockchange", pointerlockchange, false);
-  document.addEventListener("mozpointerlockchange", pointerlockchange, false);
-  document.addEventListener("webkitpointerlockchange", pointerlockchange, false);
-  document.addEventListener("pointerlockerror", pointerlockerror, false);
-  document.addEventListener("mozpointerlockerror", pointerlockerror, false);
-  document.addEventListener("webkitpointerlockerror", pointerlockerror, false);
-  instructions.addEventListener(
-    "click",
-    function(event) {
-      instructions.style.display = "none";
-      // Ask the browser to lock the pointer
-      element.requestPointerLock =
-        element.requestPointerLock ||
-        element.mozRequestPointerLock ||
-        element.webkitRequestPointerLock;
-      if (/Firefox/i.test(navigator.userAgent)) {
-        let fullscreenchange = function(event) {
-          if (
-            document.fullscreenElement === element ||
-            document.mozFullscreenElement === element ||
-            document.mozFullScreenElement === element
-          ) {
-            document.rethis.moveEventListener("fullscreenchange", fullscreenchange);
-            document.rethis.moveEventListener(
-              "mozfullscreenchange",
-              fullscreenchange
-            );
-            element.requestPointerLock();
-          }
-        };
-        document.addEventListener("fullscreenchange", fullscreenchange, false);
-        document.addEventListener(
-          "mozfullscreenchange",
-          fullscreenchange,
-          false
-        );
-        element.requestFullscreen =
-          element.requestFullscreen ||
-          element.mozRequestFullscreen ||
-          element.mozRequestFullScreen ||
-          element.webkitRequestFullscreen;
-        element.requestFullscreen();
-      } else {
-        element.requestPointerLock();
-      }
-    },
-    false
-  );
-} else {
-  instructions.innerHTML =
-    "Your browser doesn't seem to support Pointer Lock API";
-}
-
-let onKeyDown = (event) => {
-
-  switch (event.keyCode) {
-    case 38: // up
-    case 87: // w
-      this.moveForward = true;
-      break;
-    case 37: // left
-    case 65: // a
-      this.moveLeft = true;
-      break;
-    case 40: // down
-    case 83: // s
-      this.moveBackward = true;
-      break;
-    case 39: // right
-    case 68: // d
-      this.moveRight = true;
-      break;
-    case 32: // space
-      if (this.canJump === true) this.velocity.y = this.jumpVel;
-      this.canJump = false;
-      break;
-  }
-};
-let onKeyUp = (event) => {
-  switch (event.keyCode) {
-    case 38: // up
-    case 87: // w
-      this.moveForward = false;
-      break;
-    case 37: // left
-    case 65: // a
-      this.moveLeft = false;
-      break;
-    case 40: // down
-    case 83: // s
-      this.moveBackward = false;
-      break;
-    case 39: // right
-    case 68: // d
-      this.moveRight = false;
-      break;
-  }
-};
-document.addEventListener("keydown", onKeyDown, false);
-document.addEventListener("keyup", onKeyUp, false);
-  }
+  document.addEventListener("keydown", onKeyDown, false);
+  document.addEventListener("keyup", onKeyUp, false);
+    }
   
   setObjects(objects) {
     this.objects = objects;
