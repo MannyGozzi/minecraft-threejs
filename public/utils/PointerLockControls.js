@@ -11,10 +11,11 @@ export default class PointerLockControls {
     this.velocity = new THREE.Vector3();
     this.controls = new THREE.PointerLockControls(camera);
     this.object = this.controls.getObject();
-    this.object.position.y += 100;
-    this.object.position.x += 5;
-    this.object.position.z += 5;
-    this.gravityFactor = 1.0;
+    this.object.position.y += 80;
+    this.object.position.x += 5.2;
+    this.object.position.z += 5.2;
+    this.gravityFactor = 3.0;
+    this.jumpVel = 15;
     
     this.objects = [];
     this.direction = new THREE.Vector3();
@@ -121,7 +122,7 @@ let onKeyDown = (event) => {
       this.moveRight = true;
       break;
     case 32: // space
-      if (this.canJump === true) this.velocity.y = 25;
+      if (this.canJump === true) this.velocity.y = this.jumpVel;
       this.canJump = false;
       break;
   }
@@ -184,7 +185,7 @@ document.addEventListener("keyup", onKeyUp, false);
         back:      new THREE.Raycaster( this.object.position.clone(), new THREE.Vector3( 0, 0, 1 ),  0, 0.3),
         front:     new THREE.Raycaster( this.object.position.clone(), new THREE.Vector3( 0, 0, -1 ), 0, 0.3),
         top:       new THREE.Raycaster( this.object.position.clone(), new THREE.Vector3( 0, 1, 0 ),  0, 0.3),
-        bottom:    new THREE.Raycaster( this.object.position.clone(), new THREE.Vector3( 0, -1, 0 ), 0, this.velocity.y < 0 ? -this.velocity.y * (delta + 0.1) : 1)
+        bottom:    new THREE.Raycaster( this.object.position.clone(), new THREE.Vector3( 0, -1, 0 ), 0, this.velocity.y < 0 && -this.velocity * delta < 1 ? -this.velocity.y * (delta + 0.1) : 1)
       };
       
       let canMoveLeft   = true;
@@ -195,7 +196,7 @@ document.addEventListener("keyup", onKeyUp, false);
       
       for(const prop in this.raycasters) {
         const hasInterects = this.raycasters[prop].intersectObjects( this.objects ).length > 0;
-        if(prop=="bottom") { this.raycasters[prop].ray.origin.y += -1 + Math.abs(this.velocity.y < 0 ? -this.velocity.y * (delta + 0.1) : 1);}
+        if(prop=="bottom") { this.raycasters[prop].ray.origin.y += -1 + this.velocity.y < 0 && -this.velocity * delta < 1 ? -this.velocity.y * (delta + 0.1) : 1;}
         if(prop=="left"     && hasInterects) canMoveLeft    = false;
         if(prop=="right"    && hasInterects) canMoveRight   = false;
         if(prop=="back"     && hasInterects) canMoveBack    = false;
