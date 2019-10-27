@@ -177,14 +177,13 @@ document.addEventListener("keyup", onKeyUp, false);
       if ( this.moveForward || this.moveBackward ) this.velocity.z += this.direction.z * speed * delta;
       if ( this.moveLeft || this.moveRight ) this.velocity.x += this.direction.x * speed * delta;
       
-      // TODO raycasters need to be 0.5 units below or above position in order to precisely detect voxels
       this.raycasters = {
         left:      new THREE.Raycaster( this.object.position.clone(), new THREE.Vector3( -1, 0, 0 ), 0, 0.3),
         right:     new THREE.Raycaster( this.object.position.clone(), new THREE.Vector3( 1, 0, 0 ),  0, 0.3),
         back:      new THREE.Raycaster( this.object.position.clone(), new THREE.Vector3( 0, 0, 1 ),  0, 0.3),
         front:     new THREE.Raycaster( this.object.position.clone(), new THREE.Vector3( 0, 0, -1 ), 0, 0.3),
         top:       new THREE.Raycaster( this.object.position.clone(), new THREE.Vector3( 0, 1, 0 ),  0, 0.3),
-        bottom:    new THREE.Raycaster( this.object.position.clone(), new THREE.Vector3( 0, -1, 0 ), 0, this.velocity.y < 0 ? -this.velocity.y * (delta + 0.1) : 1)
+        bottom:    new THREE.Raycaster( this.object.position.clone(), new THREE.Vector3( 0, -1, 0 ), 0, this.velocity.y < 0 ? -this.velocity.y : 1)
       };
       
       let canMoveLeft   = true;
@@ -195,7 +194,7 @@ document.addEventListener("keyup", onKeyUp, false);
       
       for(const prop in this.raycasters) {
         const hasInterects = this.raycasters[prop].intersectObjects( this.objects ).length > 0;
-        if(prop=='bottom') {this.raycasters[prop].ray.origin.y += Math.abs(this.velocity.y * (delta + 0.1)) - 2; }
+        if(prop=='bottom') {this.raycasters[prop].ray.origin.y += Math.abs(this.velocity.y) - 1; }
         if(prop=="left"     && hasInterects) canMoveLeft    = false;
         if(prop=="right"    && hasInterects) canMoveRight   = false;
         if(prop=="back"     && hasInterects) canMoveBack    = false;
@@ -220,7 +219,6 @@ document.addEventListener("keyup", onKeyUp, false);
 
      let info = document.querySelector('.info');
         info.innerHTML = `
-                           delta: ${delta}                  <br>
                            x vel: ${this.object.position.x} <br>
                            y vel: ${this.object.position.y} <br>
                            z vel: ${this.object.position.z} <br>
