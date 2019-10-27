@@ -195,7 +195,7 @@ document.addEventListener("keyup", onKeyUp, false);
       
       for(const prop in this.raycasters) {
         const hasInterects = this.raycasters[prop].intersectObjects( this.objects ).length > 0;
-        if(prop=='bottom') {this.raycasters[prop].ray.origin.y += Math.abs(this.velocity.y * (delta + 0.1)) - 5; }
+        if(prop=='bottom') {this.raycasters[prop].ray.origin.y += Math.abs(this.velocity.y * (delta + 0.1)) - 2; }
         if(prop=="left"     && hasInterects) canMoveLeft    = false;
         if(prop=="right"    && hasInterects) canMoveRight   = false;
         if(prop=="back"     && hasInterects) canMoveBack    = false;
