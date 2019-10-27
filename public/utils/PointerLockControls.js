@@ -195,7 +195,7 @@ document.addEventListener("keyup", onKeyUp, false);
       
       for(const prop in this.raycasters) {
         const hasInterects = this.raycasters[prop].intersectObjects( this.objects ).length > 0;
-        if(prop=="bottom") { this.raycasters[prop].ray.origin.y += -2 + Math.abs(this.velocity.y < 0 ? -this.velocity.y * (delta + 0.1) : 1);}
+        if(prop=="bottom") { this.raycasters[prop].ray.origin.y += -1 + Math.abs(this.velocity.y < 0 ? -this.velocity.y * (delta + 0.1) : 1);}
         if(prop=="left"     && hasInterects) canMoveLeft    = false;
         if(prop=="right"    && hasInterects) canMoveRight   = false;
         if(prop=="back"     && hasInterects) canMoveBack    = false;
@@ -204,10 +204,11 @@ document.addEventListener("keyup", onKeyUp, false);
         if(prop=="bottom"   && hasInterects) onObject       = true;
       }
       
-        if ( onObject === true ) {
-          this.velocity.y = Math.max( 0, this.velocity.y );
-          this.canJump = true;
+      if ( onObject === true ) {
+        this.velocity.y = Math.max( 0, this.velocity.y );
+        this.canJump = true;
       }
+      
       const prevPos = this.object.position.clone();
       this.controls.moveRight( this.velocity.x * delta );
       this.controls.moveForward( this.velocity.z * delta );
@@ -218,9 +219,10 @@ document.addEventListener("keyup", onKeyUp, false);
       if(!canMoveFront && this.object.position.z < prevPos.z)  this.object.position.z = prevPos.z;
       if(!canMoveTop && this.object.position.y > prevPos.z)    this.object.position.y = prevPos.y;
 
+
      let info = document.querySelector('.info');
         info.innerHTML = `
-                           delta: ${delta}                  <br>
+                           delta: ${this.velocity.y}        <br>
                            x vel: ${this.object.position.x} <br>
                            y vel: ${this.object.position.y} <br>
                            z vel: ${this.object.position.z} <br>
