@@ -168,7 +168,7 @@ document.addEventListener("keyup", onKeyUp, false);
       // add friction and gravity
       this.velocity.x -= this.velocity.x * 10.0 * delta;
       this.velocity.z -= this.velocity.z * 10.0 * delta;
-      this.velocity.y -= 9.8 * this.gravityFactor * delta; // 100.0 = mass
+      this.velocity.y -= 9.8 * this.gravityFactor * delta;
       
       // this ensures consistent movements in all directions
       this.direction.z = Number( this.moveForward ) - Number( this.moveBackward );
@@ -195,13 +195,13 @@ document.addEventListener("keyup", onKeyUp, false);
       
       for(const prop in this.raycasters) {
         const hasInterects = this.raycasters[prop].intersectObjects( this.objects ).length > 0;
-        if(prop=='bottom') {this.raycasters[prop].ray.origin.y += Math.abs(this.velocity.y < 0 ? -this.velocity.y * (delta + 0.1) : 1) + 100; }
+        if(prop=="bottom") { this.raycasters[prop].ray.origin.y += -2 + Math.abs(this.velocity.y < 0 ? -this.velocity.y * (delta + 0.1) : 1);}
         if(prop=="left"     && hasInterects) canMoveLeft    = false;
         if(prop=="right"    && hasInterects) canMoveRight   = false;
         if(prop=="back"     && hasInterects) canMoveBack    = false;
         if(prop=="front"    && hasInterects) canMoveFront   = false;
         if(prop=="top"      && hasInterects) canMoveTop     = false;
-        if(prop=="bottom"   && hasInterects) { onObject = true; }
+        if(prop=="bottom"   && hasInterects) onObject       = true;
       }
       
         if ( onObject === true ) {
