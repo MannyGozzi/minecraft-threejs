@@ -15,7 +15,7 @@ export default class PointerLockControls {
     this.object.position.x += 5.25;
     this.object.position.z += 5.25;
     this.gravityFactor = 2.0;
-    this.jumpVel = 15;
+    this.jumpVel = 7.5;
     
     this.objects = [];
     this.direction = new THREE.Vector3();
