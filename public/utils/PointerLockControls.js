@@ -106,7 +106,6 @@ export default class PointerLockControls {
   }
 
   let onKeyDown = (event) => {
-
     switch (event.keyCode) {
       case 38: // up
       case 87: // w
@@ -127,6 +126,7 @@ export default class PointerLockControls {
       case 32: // space
         if (this.canJump === true) this.velocity.y = this.jumpVel;
         this.canJump = false;
+        event.preventDefault();  // stop spacebar from scrolling page down
         break;
     }
   };
@@ -246,11 +246,10 @@ export default class PointerLockControls {
     this.objects = [];
 
     const unitVec = this.velocity.clone().normalize();
-    const currPos = THREE.Vector3(Math.floor(xPos), Math.floor(yPos), Math.floor(zPos));
-        console.log(currPos);
+    const currPos = this.object.position.clone().floor();
 
     let   steps   = 1;
-    while(yVel > -200 && yVel < 0) {
+    while(yVel > -200 && yVel < 0 && steps < 20) {
       const unitVecPicker = unitVec.clone().multiplyScalar(steps);
       if(this.voxelWorld.getVoxel(currPos.clone().add(unitVecPicker))) {
         const object = new THREE.Mesh(new THREE.BoxBufferGeometry(1,1,1), new THREE.MeshBasicMaterial());

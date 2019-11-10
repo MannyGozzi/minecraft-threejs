@@ -1,3 +1,5 @@
+// TODO fix collisions within the pointerlock controls class | update collision objects method
+
 import PointerLockControls from "/utils/PointerLockControls.js";
 import PointLight from "/utils/pointLight.js";
 import AmbientLight from "/utils/ambientLight.js";
