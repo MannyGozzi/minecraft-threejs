@@ -249,7 +249,7 @@ export default class PointerLockControls {
     const unitVec = this.velocity.clone().normalize();
     const currPos = this.object.position.clone().floor();
 
-    let   steps   = 1;
+    let   steps   = 0;
     while(steps < this.velocity.length() + 1) {
       const unitVecPicker = unitVec.clone().multiplyScalar(steps);
       const pos = currPos.clone().add(unitVecPicker).floor();
