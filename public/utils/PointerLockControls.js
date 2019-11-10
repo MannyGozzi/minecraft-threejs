@@ -1,7 +1,7 @@
 // this is the largest and most complicated part of the code
 // it can be modulized with great effort though
 export default class PointerLockControls {
-  constructor(camera, voxelWorld) {
+  constructor(camera, voxelWorld, scene) {
     this.controls;
     this.controlsEnabled = true;
     this.moveForward = false;
@@ -13,12 +13,13 @@ export default class PointerLockControls {
     this.velocity = new THREE.Vector3();
     this.controls = new THREE.PointerLockControls(camera);
     this.object = this.controls.getObject();
-    this.object.position.y += 80;
+    this.object.position.y += 32; // 80.0
     this.object.position.x += 5.25;
     this.object.position.z += 5.25;
-    this.gravityFactor = 0.1; // 2.0
+    this.gravityFactor = 0.05; // 2.0
     this.jumpVel = 7.5;
     this.voxelWorld = voxelWorld;
+    this.scene = scene;
     
     this.objects = [];
     this.direction = new THREE.Vector3();
@@ -249,13 +250,15 @@ export default class PointerLockControls {
     const currPos = this.object.position.clone().floor();
 
     let   steps   = 1;
-    while(steps < this.velocity.length()) {
+    while(steps < this.velocity.length() + 1) {
       const unitVecPicker = unitVec.clone().multiplyScalar(steps);
       const pos = currPos.clone().add(unitVecPicker).floor();
       if(this.voxelWorld.getVoxel(pos.x, pos.y, pos.z)) {
         const object = new THREE.Mesh(new THREE.BoxBufferGeometry(1,1,1), new THREE.MeshBasicMaterial({color: 0xFF0000}));
-        object.position = pos;
+        object.geometry.computeBoundingBox();
+        object.position.set(pos.x + 0.5, pos.y + 0.5, pos.z + 0.5);
         this.objects.push(object);
+        this.scene.add(object);
         return;
       }
       steps += 1;
