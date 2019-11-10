@@ -16,7 +16,7 @@ export default class PointerLockControls {
     this.object.position.y += 80;
     this.object.position.x += 5.25;
     this.object.position.z += 5.25;
-    this.gravityFactor = 2.0;
+    this.gravityFactor = 0.1; // 2.0
     this.jumpVel = 7.5;
     this.voxelWorld = voxelWorld;
     
@@ -228,9 +228,9 @@ export default class PointerLockControls {
      let info = document.querySelector('.info');
         info.innerHTML = `
                            idk  : ${this.objects}        <br>
-                           x vel: ${this.object.position.x} <br>
-                           y vel: ${this.object.position.y} <br>
-                           z vel: ${this.object.position.z} <br>
+                           x    : ${this.object.position.x} <br>
+                           y    : ${this.object.position.y} <br>
+                           z    : ${this.object.position.z} <br>
                           `;
       this.prevTime = time;
     }
@@ -249,13 +249,13 @@ export default class PointerLockControls {
     const currPos = this.object.position.clone().floor();
 
     let   steps   = 1;
-    while(yVel > -200 && yVel < 0 && steps < 20) {
+    while(steps < this.velocity.length()) {
       const unitVecPicker = unitVec.clone().multiplyScalar(steps);
-      if(this.voxelWorld.getVoxel(currPos.clone().add(unitVecPicker))) {
-        const object = new THREE.Mesh(new THREE.BoxBufferGeometry(1,1,1), new THREE.MeshBasicMaterial());
-        object.position.add(currPos).floor();
+      const pos = currPos.clone().add(unitVecPicker).floor();
+      if(this.voxelWorld.getVoxel(pos.x, pos.y, pos.z)) {
+        const object = new THREE.Mesh(new THREE.BoxBufferGeometry(1,1,1), new THREE.MeshBasicMaterial({color: 0xFF0000}));
+        object.position = pos;
         this.objects.push(object);
-        alert('got one');
         return;
       }
       steps += 1;
