@@ -247,7 +247,8 @@ export default class PointerLockControls {
 
     const unitVec = this.velocity.clone().normalize();
     const currPos = this.object.position.clone().floor();
-    this.objects  = [];
+    // needs to be optimized
+    // this.objects  = [];
     
     let   steps   = 0;
     while(steps < this.velocity.length() + 1) {
