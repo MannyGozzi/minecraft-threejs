@@ -227,7 +227,7 @@ export default class PointerLockControls {
 
      let info = document.querySelector('.info');
         info.innerHTML = `
-                           idk  : ${this.velocity.y}        <br>
+                           idk  : ${this.objects}        <br>
                            x vel: ${this.object.position.x} <br>
                            y vel: ${this.object.position.y} <br>
                            z vel: ${this.object.position.z} <br>
@@ -253,12 +253,12 @@ export default class PointerLockControls {
       const unitVecPicker = unitVec.clone().multiplyScalar(steps);
       if(this.voxelWorld.getVoxel(currPos.clone().add(unitVecPicker))) {
         const object = new THREE.Mesh(new THREE.BoxBufferGeometry(1,1,1), new THREE.MeshBasicMaterial());
-        object.position.add(currPos);
+        object.position.add(currPos).floor();
         this.objects.push(object);
+        alert('got one');
         return;
       }
       steps += 1;
     }
-    // voxelWorld.getVoxel(x, y, z);
   }
 }
