@@ -1,5 +1,7 @@
+// this is the largest and most complicated part of the code
+// it can be modulized with great effort though
 export default class PointerLockControls {
-  constructor(camera) {
+  constructor(camera, voxelWorld) {
     this.controls;
     this.controlsEnabled = true;
     this.moveForward = false;
@@ -16,6 +18,7 @@ export default class PointerLockControls {
     this.object.position.z += 5.25;
     this.gravityFactor = 2.0;
     this.jumpVel = 7.5;
+    this.voxelWorld = voxelWorld;
     
     this.objects = [];
     this.direction = new THREE.Vector3();
@@ -160,6 +163,7 @@ export default class PointerLockControls {
   }
 
   update() {
+    this.updateCollisionObjects();
     if (this.controlsEnabled) {
       const speed = 50.0;
       const time = performance.now();
@@ -223,12 +227,26 @@ export default class PointerLockControls {
 
      let info = document.querySelector('.info');
         info.innerHTML = `
-                           delta: ${this.velocity.y}        <br>
+                           idk  : ${this.velocity.y}        <br>
                            x vel: ${this.object.position.x} <br>
                            y vel: ${this.object.position.y} <br>
                            z vel: ${this.object.position.z} <br>
                           `;
       this.prevTime = time;
     }
+  }
+  
+  updateCollisionObjects() {
+    const xPos = this.object.position.x;
+    const yPos = this.object.position.y;
+    const zPos = this.object.position.z;
+    const xVel = this.velocity.x;
+    const yVel = this.velocity.y;
+    const zVel = this.velocity.z;
+  
+    for(let y = yPos; y > yPos+this.velocity.y) {
+      
+    }
+    // voxelWorld.getVoxel(x, y, z);
   }
 }
