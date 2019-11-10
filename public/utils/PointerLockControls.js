@@ -13,10 +13,10 @@ export default class PointerLockControls {
     this.velocity = new THREE.Vector3();
     this.controls = new THREE.PointerLockControls(camera);
     this.object = this.controls.getObject();
-    this.object.position.y += 32; // 80.0
+    this.object.position.y += 80; // 80.0
     this.object.position.x += 5.25;
     this.object.position.z += 5.25;
-    this.gravityFactor = 0.05; // 2.0
+    this.gravityFactor = 2.0; // 2.0
     this.jumpVel = 7.5;
     this.voxelWorld = voxelWorld;
     this.scene = scene;
@@ -208,7 +208,6 @@ export default class PointerLockControls {
         if(prop=="front"    && hasIntersects) canMoveFront   = false;
         if(prop=="top"      && hasIntersects) canMoveTop     = false;
         if(prop=="bottom"   && hasIntersects) onObject       = true;
-        if(hasIntersects) alert('true');
       }
       
       if ( onObject === true ) {
@@ -245,11 +244,11 @@ export default class PointerLockControls {
     const xVel = this.velocity.x;
     const yVel = this.velocity.y;
     const zVel = this.velocity.z;
-    this.objects = [];
 
     const unitVec = this.velocity.clone().normalize();
     const currPos = this.object.position.clone().floor();
-
+    this.objects  = [];
+    
     let   steps   = 0;
     while(steps < this.velocity.length() + 1) {
       const unitVecPicker = unitVec.clone().multiplyScalar(steps);
@@ -261,8 +260,6 @@ export default class PointerLockControls {
         object.geometry.computeBoundingSphere();
         this.objects.push(object);
         this.scene.add(object);
-        console.log('object added');
-        console.log(this.objects);
         break;
       }
       steps += 1;
