@@ -243,9 +243,17 @@ export default class PointerLockControls {
     const xVel = this.velocity.x;
     const yVel = this.velocity.y;
     const zVel = this.velocity.z;
-  
-    for(let y = yPos; y > yPos+this.velocity.y) {
-      
+    this.objects = [];
+    
+    const unitVec = this.velocity.clone().normalize();
+    const currPos = THREE.Vector3(Math.floor(xPos), Math.floor(yPos), Math.floor(zPos));
+    let   steps   = 1;
+    while(yVel > -200 && yVel < 0) {
+      const unitVecPicker = unitVec.clone().multScalar(steps);
+      if(this.voxelWorld.getVoxel(currPos.clone().add(unitVecPicker))) {
+        this.objects.push(new THREE.Mesh(new BoxBufferGeometry(1,1,1), new THREE.MeshBasicMaterial()));
+      }
+      steps += 1;
     }
     // voxelWorld.getVoxel(x, y, z);
   }
