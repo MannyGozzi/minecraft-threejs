@@ -200,14 +200,15 @@ export default class PointerLockControls {
       let canMoveTop    = true;
       
       for(const prop in this.raycasters) {
-        const hasInterects = this.raycasters[prop].intersectObjects( this.objects ).length > 0;
+        const hasIntersects = this.raycasters[prop].intersectObjects( this.objects ).length > 0;
         if(prop=="bottom") { this.raycasters[prop].ray.origin.y += -1 + this.velocity.y < 0 && -this.velocity * delta < 1 ? -this.velocity.y * (delta + 0.1) : 1;}
-        if(prop=="left"     && hasInterects) canMoveLeft    = false;
-        if(prop=="right"    && hasInterects) canMoveRight   = false;
-        if(prop=="back"     && hasInterects) canMoveBack    = false;
-        if(prop=="front"    && hasInterects) canMoveFront   = false;
-        if(prop=="top"      && hasInterects) canMoveTop     = false;
-        if(prop=="bottom"   && hasInterects) onObject       = true;
+        if(prop=="left"     && hasIntersects) canMoveLeft    = false;
+        if(prop=="right"    && hasIntersects) canMoveRight   = false;
+        if(prop=="back"     && hasIntersects) canMoveBack    = false;
+        if(prop=="front"    && hasIntersects) canMoveFront   = false;
+        if(prop=="top"      && hasIntersects) canMoveTop     = false;
+        if(prop=="bottom"   && hasIntersects) onObject       = true;
+        if(hasIntersects) alert('true');
       }
       
       if ( onObject === true ) {
@@ -256,10 +257,13 @@ export default class PointerLockControls {
       if(this.voxelWorld.getVoxel(pos.x, pos.y, pos.z)) {
         const object = new THREE.Mesh(new THREE.BoxBufferGeometry(1,1,1), new THREE.MeshBasicMaterial({color: 0xFF0000}));
         object.geometry.computeBoundingBox();
+        object.geometry.computeBoundingSphere();
         object.position.set(pos.x + 0.5, pos.y + 0.5, pos.z + 0.5);
         this.objects.push(object);
         this.scene.add(object);
-        return;
+        console.log('object added');
+        console.log(this.objects);
+        break;
       }
       steps += 1;
     }
