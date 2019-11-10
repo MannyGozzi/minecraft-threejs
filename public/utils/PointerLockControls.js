@@ -256,9 +256,9 @@ export default class PointerLockControls {
       const pos = currPos.clone().add(unitVecPicker).floor();
       if(this.voxelWorld.getVoxel(pos.x, pos.y, pos.z)) {
         const object = new THREE.Mesh(new THREE.BoxBufferGeometry(1,1,1), new THREE.MeshBasicMaterial({color: 0xFF0000}));
+        object.position.set(pos.x + 0.5, pos.y + 0.5, pos.z + 0.5);
         object.geometry.computeBoundingBox();
         object.geometry.computeBoundingSphere();
-        object.position.set(pos.x + 0.5, pos.y + 0.5, pos.z + 0.5);
         this.objects.push(object);
         this.scene.add(object);
         console.log('object added');
