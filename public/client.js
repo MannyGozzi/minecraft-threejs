@@ -1,3 +1,4 @@
+// TODO COLLISIONS NOT WORKING HOWEVER OBJECTS ARE ADDED TO WORLD CORRECTLY
 import PointerLockControls from "/utils/PointerLockControls.js";
 import PointLight from "/utils/pointLight.js";
 import AmbientLight from "/utils/ambientLight.js";
