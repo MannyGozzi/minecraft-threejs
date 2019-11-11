@@ -228,7 +228,6 @@ export default class PointerLockControls {
 
      let info = document.querySelector('.info');
         info.innerHTML = `
-                           idk  : ${this.objects}        <br>
                            x    : ${this.object.position.x} <br>
                            y    : ${this.object.position.y} <br>
                            z    : ${this.object.position.z} <br>
