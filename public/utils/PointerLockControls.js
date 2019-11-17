@@ -290,15 +290,10 @@ export default class PointerLockControls {
   cleanCollisionObjects() {
     this.objects.filter(object => {
       if (object.position.distanceTo(this.object.position) > 5) {
-        return 0;
+        this.scene.remove(object);
+        return true;
       }
-      return 1;
-    });
-    this.scene.children.filter(object => {
-      if (object.position.distanceTo(this.object.position) > 5) {
-        return 0;
-      }
-      return 1;
+      return false;
     });
   }
 }
