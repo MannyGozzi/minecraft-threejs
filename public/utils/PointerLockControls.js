@@ -170,6 +170,7 @@ export default class PointerLockControls {
       const speed = 50.0;
       const time = performance.now();
       const delta = (time - this.prevTime) / 1000;
+      this.delta = delta;
       let onObject;
       
       // add friction and gravity
@@ -249,11 +250,8 @@ export default class PointerLockControls {
     const currPos = this.object.position.clone().floor().add(new THREE.Vector3(0.0, 0.5, 0.0));
     this.getNearbyCollisionObjects(currPos.x, currPos.y - 0.5, currPos.z);
     
-    // needs to be optimized
-    // this.objects  = [];
-    
     let   steps   = 0;
-    while(steps < this.velocity.length() + 1) {
+    while(steps < this.velocity.length() * (this.delta + 0.1) + 1) {
       const unitVecPicker = unitVec.clone().multiplyScalar(steps);
       const pos = currPos.clone().add(unitVecPicker).floor();
       if(this.voxelWorld.getVoxel(pos.x, pos.y, pos.z)) {
@@ -289,7 +287,7 @@ export default class PointerLockControls {
   
   cleanCollisionObjects() {
     this.objects.filter(object => {
-      if (object.position.distanceTo(this.object.position) > 5) {
+      if (object.position.distanceTo(this.object.position) > 2) {
         this.scene.remove(object);
         return true;
       }

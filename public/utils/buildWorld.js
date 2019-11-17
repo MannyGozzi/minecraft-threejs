@@ -1,14 +1,14 @@
 import VoxelWorld from '/utils/voxelWorld.js';
 
 export default function buildWorld() {
-  const cellSize = 16;
+  const cellSize = 32;
   const loader = new THREE.TextureLoader();
   const texture = loader.load("https://cdn.glitch.com/09b41b8e-5b1b-470e-8b60-eeaccaea49e9%2Ftexture_atlas_edited.png?v=1571104174274");
   texture.encoding = THREE.sRGBEncoding;
   texture.magFilter = THREE.NearestFilter;
   texture.minFilter = THREE.NearestFilter;
 
-  const tileSize = 64;                            //height/width of each voxel face
+  const tileSize = 16;                            //height/width of each voxel face
   const tileTextureWidth = 256;        //entire atlas texture width
   const tileTextureHeight = 64;
   const world = new VoxelWorld({ 
