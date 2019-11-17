@@ -246,6 +246,8 @@ export default class PointerLockControls {
 
     const unitVec = this.velocity.clone().normalize();
     const currPos = this.object.position.clone().floor().add(new THREE.Vector3(0.0, 0.5, 0.0));
+    this.getNearbyCollisionObjects(currPos.x, currPos.y - 0.5, currPos.z);
+    
     // needs to be optimized
     // this.objects  = [];
     
@@ -266,7 +268,20 @@ export default class PointerLockControls {
     }
   }
   
-  getNearByCollionObjects() {
-    
+  getNearbyCollisionObjects(x_, y_, z_) {
+    for(let y = y_ - 1; y <= y_ + 1; y += 1) {
+      for(let z = z_ -1; z <= z_ + 1; z += 1) {
+        for(let x = x_ -1; x <= x_ + 1; x+=1) {
+          if(this.voxelWorld.getVoxel(x, y, z)) {
+            const object = new THREE.Mesh(new THREE.BoxBufferGeometry(1,1,1), new THREE.MeshBasicMaterial({color: 0xFF0000}));
+            object.position.set(x + 0.5, y + 0.5, z + 0.5);
+            object.geometry.computeBoundingBox();
+            object.geometry.computeBoundingSphere();
+            this.objects.push(object);
+            this.scene.add
+          }
+        }
+      }
+    }
   }
 }
