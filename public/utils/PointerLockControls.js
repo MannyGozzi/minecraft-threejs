@@ -164,6 +164,7 @@ export default class PointerLockControls {
   }
 
   update() {
+    this.cleanCollisionObjects();
     this.updateCollisionObjects();
     if (this.controlsEnabled) {
       const speed = 50.0;
@@ -261,7 +262,6 @@ export default class PointerLockControls {
         object.geometry.computeBoundingBox();
         object.geometry.computeBoundingSphere();
         this.objects.push(object);
-        this.scene.add(object);
         break;
       }
       steps += 1;
@@ -278,10 +278,19 @@ export default class PointerLockControls {
             object.geometry.computeBoundingBox();
             object.geometry.computeBoundingSphere();
             this.objects.push(object);
-            this.scene.add
           }
         }
       }
     }
+  }
+  
+  
+  cleanCollisionObjects() {
+    this.objects.filter(object => {
+      if (object.position.distanceTo(this.object.position) > 5) {
+        return 0;
+      }
+      return 1;
+    });
   }
 }
