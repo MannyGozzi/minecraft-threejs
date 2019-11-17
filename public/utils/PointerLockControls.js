@@ -294,5 +294,11 @@ export default class PointerLockControls {
       }
       return 1;
     });
+    this.scene.children.filter(object => {
+      if (object.position.distanceTo(this.object.position) > 5) {
+        return 0;
+      }
+      return 1;
+    });
   }
 }
