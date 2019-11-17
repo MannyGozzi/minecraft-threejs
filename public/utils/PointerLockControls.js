@@ -245,7 +245,7 @@ export default class PointerLockControls {
     const zVel = this.velocity.z;
 
     const unitVec = this.velocity.clone().normalize();
-    const currPos = this.object.position.clone().floor();
+    const currPos = this.object.position.clone().floor().add(new THREE.Vector3(0.0, 0.5, 0.0));
     // needs to be optimized
     // this.objects  = [];
     
@@ -264,5 +264,9 @@ export default class PointerLockControls {
       }
       steps += 1;
     }
+  }
+  
+  getNearByCollionObjects() {
+    
   }
 }
