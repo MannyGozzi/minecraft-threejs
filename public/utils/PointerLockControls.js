@@ -262,6 +262,7 @@ export default class PointerLockControls {
         object.geometry.computeBoundingBox();
         object.geometry.computeBoundingSphere();
         this.objects.push(object);
+        this.scene.add(object);
         break;
       }
       steps += 1;
@@ -278,6 +279,7 @@ export default class PointerLockControls {
             object.geometry.computeBoundingBox();
             object.geometry.computeBoundingSphere();
             this.objects.push(object);
+            this.scene.add(object);
           }
         }
       }
