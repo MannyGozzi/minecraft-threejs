@@ -1,5 +1,3 @@
-// TODO look at chrome dev tools to see why physics is super slow as time progresses
-
 // this is the largest and most complicated part of the code
 // it can be modulized with great effort though
 export default class PointerLockControls {
@@ -289,7 +287,7 @@ export default class PointerLockControls {
   
   cleanCollisionObjects() {
     this.objects.filter(object => {
-      if (object.position.distanceTo(this.object.position) > 3) {
+      if (object.position.distanceTo(this.object.position) > 2) {
         this.scene.remove(object);
         return true;
       }
