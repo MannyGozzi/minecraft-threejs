@@ -1,3 +1,5 @@
+import * as THREE from "https://cdn.skypack.dev/three@0.132.2";
+
 import VoxelWorld from '/utils/voxelWorld.js';
 
 export default function buildWorld() {

@@ -1,6 +1,6 @@
 // TODO COLLISIONS NOT WORKING HOWEVER OBJECTS ARE ADDED TO WORLD CORRECTLY
-import \* AS THREE from "https://cdn.skypack.dev/three@0.132.2";
-import { PointerLockControls } from "https://cdn.skypack.dev/three@0.132.2/examples/jsm/controls/PointerLockControls.js";
+import * as THREE from "https://cdn.skypack.dev/three@0.132.2";
+import PointerLockControls from "/utils/PointerLockControls.js";
 import PointLight from "/utils/pointLight.js";
 import AmbientLight from "/utils/ambientLight.js";
 import { ImprovedNoise } from "/utils/ImprovedNoise.js";

@@ -1,3 +1,5 @@
+import * as THREE from "https://cdn.skypack.dev/three@0.132.2";
+
 export default function configCamera() {
    // Create a Camera
   const fov = 90; // AKA Field of View

@@ -1,3 +1,6 @@
+import * as THREE from "https://cdn.skypack.dev/three@0.132.2";
+import { PointerLockControls as ThreePointerLockControls } from "https://cdn.skypack.dev/three@0.132.2/examples/jsm/controls/PointerLockControls.js";
+
 
 // this is the largest and most complicated part of the code
 // it can be modulized with great effort though
@@ -12,7 +15,7 @@ export default class PointerLockControls {
     this.canJump = false;
     this.prevTime = performance.now();
     this.velocity = new THREE.Vector3();
-    this.controls = new THREE.PointerLockControls(camera);
+    this.controls = new ThreePointerLockControls(camera);
     this.object = this.controls.getObject();
     this.object.position.y += 80; // 80.0
     this.object.position.x += 5.25;

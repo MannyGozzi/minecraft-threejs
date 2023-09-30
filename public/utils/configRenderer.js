@@ -1,4 +1,4 @@
-
+import * as THREE from "https://cdn.skypack.dev/three@0.132.2";
 export default function configRenderer(renderContainer) {
   //initialize the renderer
   const renderer = new THREE.WebGLRenderer({
