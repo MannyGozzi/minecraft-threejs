@@ -1,4 +1,3 @@
-import * as THREE from "three";
 
 // this is the largest and most complicated part of the code
 // it can be modulized with great effort though

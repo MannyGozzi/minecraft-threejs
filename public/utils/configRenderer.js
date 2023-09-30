@@ -1,3 +1,4 @@
+
 export default function configRenderer(renderContainer) {
   //initialize the renderer
   const renderer = new THREE.WebGLRenderer({

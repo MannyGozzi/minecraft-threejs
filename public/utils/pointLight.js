@@ -1,3 +1,4 @@
+
 export default function PointLight() {
   const color = 0xffffff;
   const intensity = 1;
