@@ -297,9 +297,9 @@ export default class PointerLockControls {
 
       let info = document.querySelector(".info");
       info.innerHTML = `
-                           x    : ${this.object.position.x} <br>
-                           y    : ${this.object.position.y} <br>
-                           z    : ${this.object.position.z} <br>
+                           x    : ${Math.floor(this.object.position.x)} <br>
+                           y    : ${Math.floor(this.object.position.y)} <br>
+                           z    : ${Math.floor(this.object.position.z)} <br>
                           `;
       this.prevTime = time;
     }
@@ -345,7 +345,7 @@ export default class PointerLockControls {
 
   getNearbyCollisionObjects(x_, y_, z_) {
     const dist = 1
-    for (let y = y_ - dist; y <= y_ + dist; y += 1) {
+    for (let y = y_ - dist; y <= y_; y += 1) {
       for (let z = z_ - dist; z <= z_ + dist; z += 1) {
         for (let x = x_ - dist; x <= x_ + dist; x += 1) {
           if (this.voxelWorld.getVoxel(x, y, z)) {
