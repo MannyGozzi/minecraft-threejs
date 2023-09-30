@@ -1,6 +1,6 @@
 // TODO COLLISIONS NOT WORKING HOWEVER OBJECTS ARE ADDED TO WORLD CORRECTLY
-import * as THREE from 'three';
-import { PointerLockControls } from 'three/addons/controls/PointerLockControls.js';
+import \* AS THREE from "https://cdn.skypack.dev/three@0.132.2";
+import { PointerLockControls } from "https://cdn.skypack.dev/three@0.132.2/examples/jsm/controls/PointerLockControls.js";
 import PointLight from "/utils/pointLight.js";
 import AmbientLight from "/utils/ambientLight.js";
 import { ImprovedNoise } from "/utils/ImprovedNoise.js";
@@ -11,7 +11,8 @@ import configRenderer from '/utils/configRenderer.js';
 import attachResizeListener from '/utils/attachResizeListener.js';
 
 const renderContainer = document.querySelector("#renderer");
-const scene = new THREE.Scene(); scene.background = new THREE.Color("lightblue");
+const scene = new THREE.Scene(); 
+scene.background = new THREE.Color("lightblue");
 
 const camera = configCamera();
 const renderer = configRenderer(renderContainer);
