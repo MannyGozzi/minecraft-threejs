@@ -186,6 +186,7 @@ export default class PointerLockControls {
   }
 
   update() {
+    console.log(this.objects);
     this.cleanCollisionObjects();
     this.updateCollisionObjects();
     if (this.controlsEnabled) {
@@ -317,8 +318,10 @@ export default class PointerLockControls {
       .clone()
       .floor()
       .add(new THREE.Vector3(0.0, 0.5, 0.0));
+    this.objects.forEach((object) => {
+      this.scene.remove(object);
+    })
     this.getNearbyCollisionObjects(currPos.x, currPos.y - 0.5, currPos.z);
-
     let steps = 0;
     while (steps < this.velocity.length() * (this.delta + 0.1) + 1) {
       const unitVecPicker = unitVec.clone().multiplyScalar(steps);
@@ -340,9 +343,9 @@ export default class PointerLockControls {
   }
 
   getNearbyCollisionObjects(x_, y_, z_) {
-    for (let y = y_ - 1; y <= y_ + 1; y += 1) {
-      for (let z = z_ - 1; z <= z_ + 1; z += 1) {
-        for (let x = x_ - 1; x <= x_ + 1; x += 1) {
+    for (let y = y_ - 2; y <= y_ + 2; y += 1) {
+      for (let z = z_ - 2; z <= z_ + 2; z += 1) {
+        for (let x = x_ - 2; x <= x_ + 2; x += 1) {
           if (this.voxelWorld.getVoxel(x, y, z)) {
             const object = new THREE.Mesh(
               new THREE.BoxBufferGeometry(1, 1, 1),
@@ -360,12 +363,11 @@ export default class PointerLockControls {
   }
 
   cleanCollisionObjects() {
-    this.objects.filter((object) => {
+    const objectsToSave = this.objects.filter((object) => {
       if (object.position.distanceTo(this.object.position) > 2) {
         this.scene.remove(object);
-        return true;
       }
-      return false;
     });
+    
   }
 }
