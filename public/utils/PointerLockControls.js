@@ -329,11 +329,12 @@ export default class PointerLockControls {
       if (this.voxelWorld.getVoxel(pos.x, pos.y, pos.z)) {
         const object = new THREE.Mesh(
           new THREE.BoxBufferGeometry(1, 1, 1),
-          new THREE.MeshBasicMaterial({ color: 0xff0000 })
+          new THREE.MeshBasicMaterial({ color: 0xaaaaaa })
         );
         object.position.set(pos.x + 0.5, pos.y + 0.5, pos.z + 0.5);
         object.geometry.computeBoundingBox();
         object.geometry.computeBoundingSphere();
+        object.geometry.scale(1.01, 1.01, 1.01);
         this.objects.push(object);
         this.scene.add(object);
         break;
@@ -343,17 +344,19 @@ export default class PointerLockControls {
   }
 
   getNearbyCollisionObjects(x_, y_, z_) {
-    for (let y = y_ - 2; y <= y_ + 2; y += 1) {
-      for (let z = z_ - 2; z <= z_ + 2; z += 1) {
-        for (let x = x_ - 2; x <= x_ + 2; x += 1) {
+    const dist = 1
+    for (let y = y_ - dist; y <= y_ + dist; y += 1) {
+      for (let z = z_ - dist; z <= z_ + dist; z += 1) {
+        for (let x = x_ - dist; x <= x_ + dist; x += 1) {
           if (this.voxelWorld.getVoxel(x, y, z)) {
             const object = new THREE.Mesh(
               new THREE.BoxBufferGeometry(1, 1, 1),
-              new THREE.MeshBasicMaterial({ color: 0xff0000 })
+              new THREE.MeshBasicMaterial({ color: 0xaaaaaa })
             );
             object.position.set(x + 0.5, y + 0.5, z + 0.5);
             object.geometry.computeBoundingBox();
             object.geometry.computeBoundingSphere();
+            object.geometry.scale(1.01, 1.01, 1.01);
             this.objects.push(object);
             this.scene.add(object);
           }
@@ -363,11 +366,12 @@ export default class PointerLockControls {
   }
 
   cleanCollisionObjects() {
-    const objectsToSave = this.objects.filter((object) => {
-      if (object.position.distanceTo(this.object.position) > 2) {
+    this.objects = this.objects.filter((object) => {
+      if (object.position.distanceTo(this.object.position) > 5) {
         this.scene.remove(object);
+        return false;
       }
+      return true;
     });
-    
   }
 }
