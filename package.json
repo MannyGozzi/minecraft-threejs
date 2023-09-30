@@ -2,7 +2,7 @@
   "//1": "describes your app and its dependencies",
   "//2": "https://docs.npmjs.com/files/package.json",
   "//3": "updating this file will download and update your packages",
-  "name": "minecraft three",
+  "name": "minecraft-three",
   "version": "0.0.1",
   "description": "A simple Node app built on Express, instantly up and running.",
   "main": "server.js",
@@ -10,8 +10,7 @@
     "start": "node server.js"
   },
   "dependencies": {
-    "express": "^4.18.2",
-    "three": "^0.156.1"
+    "express": "^4.18.2"
   },
   "engines": {
     "node": "8.x"
