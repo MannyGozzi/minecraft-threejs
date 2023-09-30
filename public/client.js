@@ -27,9 +27,6 @@ attachResizeListener(renderer, camera);
 let pointerLock = new PointerLockControls(camera, world, scene);
 scene.add(pointerLock.controls.getObject());
 
-//add all objects that the player needs to interact with physically
-
-
 render();
 
 function render() {
