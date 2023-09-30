@@ -11,7 +11,8 @@
   },
   "dependencies": {
     "express": "^4.16.4",
-    "pug": "^2.0.4"
+    "pug": "^2.0.4",
+    "three": "^0.157.0"
   },
   "engines": {
     "node": "8.x"

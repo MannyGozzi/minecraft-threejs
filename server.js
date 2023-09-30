@@ -5,9 +5,6 @@
 const express = require("express");
 const app = express();
 
-// we've started you off with Express,
-// but feel free to use whatever libs or frameworks you'd like through `package.json`.
-app.set('view engine', 'pug');
 // http://expressjs.com/en/starter/static-files.html
 app.use(express.static("public"));
 
